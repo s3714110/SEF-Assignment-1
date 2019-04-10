@@ -2,12 +2,18 @@ import java.util.*;
 public class ReceiptItem {
 	private String productId; 
 	private int qty; 
-	private int total;
+	private double total;
+	private ProductList productList;
 	
 	public ReceiptItem(String productId) {
 		this.productId = productId;
 	}
 
+	//placeholder method
+	public void setProductList(ProductList productList) {
+		this.productList = productList;
+	}
+	
 	public String getProductId() {
 		return productId;
 	}
@@ -21,6 +27,7 @@ public class ReceiptItem {
 	
 	public int getTotal() {
 		// needs a products (collection of product) to get the single price of item
+		total = productList.getProduct(productId).getPrice() * qty;
 		return 0;
 		
 	}
