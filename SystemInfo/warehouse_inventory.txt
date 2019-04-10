@@ -1,0 +1,12 @@
+vgmt220g	500
+vgmt380g	500
+vgmt560g	500
+nt400g	500
+fpra560g	300
+fpra750g	300
+asf10pk	50
+egg12pk	100
+egg6pk	100
+cc600ml	2000
+cc1500ml	2000
+cc2000ml	2000

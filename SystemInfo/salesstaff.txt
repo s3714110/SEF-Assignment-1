@@ -1,0 +1,5 @@
+e0001	David Smith	100 Swantson st, Melbourne, VIC, 3000	0400123457
+e0002	Emma Smith	100 Swantson st, Melbourne, VIC, 3000	0400123458
+e0003	Bob Smith	100 Swantson st, Melbourne, VIC, 3000	0400123459
+e0004	Big L	52 King st, Melbourne, VIC, 3000	0400654321
+e0005	Pete Rock	101 King st, Melbourne, VIC, 3000	0400123123
