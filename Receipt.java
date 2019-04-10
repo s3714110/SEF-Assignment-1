@@ -9,10 +9,11 @@ public class Receipt {
 	private String total;
 	private ProductList productList;
 	
-	public Receipt(String employeeId, String customerId, String receiptId) {
+	public Receipt(String employeeId, String customerId, String receiptId, ProductList productList) {
 		this.employeeId = employeeId;
 		this.customerId = customerId;
 		this.receiptId = receiptId;
+		this.productList = productList;
 		date = new Date();
 		itemList = new LinkedList<ReceiptItem>();
 	}
@@ -21,9 +22,6 @@ public class Receipt {
 		return receiptId;
 	}
 	
-	public void setProductList(ProductList productList) {
-		this.productList = productList;
-	}
 	
 	public String getEmployeeId() {
 		return employeeId;
@@ -51,8 +49,8 @@ public class Receipt {
 	
 	public String toString() {
 		int counter = 1;
-		total = String.format("%-25s %s\n", "Employee ID:", getEmployeeId()) +
-				String.format("%-25s %s\n", "Customer ID:", getCustomerId()) +
+		total = String.format("%-25s %s\n", "Employee ID:", employeeId) +
+				String.format("%-25s %s\n", "Customer ID:", customerId) +
 				String.format("%-25s %s\n", "Date:", getDate());
 		for (ReceiptItem temp: itemList ) {
 				total += counter + ") " + itemList.toString();
