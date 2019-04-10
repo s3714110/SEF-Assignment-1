@@ -2,24 +2,20 @@ import java.util.*;
 
 public class ProductList {
 	
-	private List<Product> products = new LinkedList<Product>();
+	private Map<String, Product> products = new HashMap<String, Product>();
 	
 	public void addProduct(String id, String name, String type, double price) {
-		products.add(new Product( id,  name,  type,  price));
+		products.put(id, new Product( id,  name,  type,  price));
 	}
 	
 	public void removeProduct(String id) {
-		for(Product temp: products) {
-			if(temp.getID() == id) {
-				products.remove(temp);
-			}
-		}
+		products.remove(id);
 	}
 	
 	public Product getProduct(String id) {
-		for(Product temp: products) {
-			if(temp.getID() == id) {
-				return temp;
+		for (String key: products.keySet()) {
+			if(id == key) {
+				return products.get(id);
 			}
 		}
 		return null;
