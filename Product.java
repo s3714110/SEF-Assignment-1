@@ -43,7 +43,7 @@ public class Product {
 	}
 	
 	public void setBulkDiscount(double percentage, int qty){
-		discount = percentage;
+		bulkDiscount = percentage;
 		qtyBulkDiscount = qty;
 	}
 	

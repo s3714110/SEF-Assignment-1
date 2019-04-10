@@ -13,12 +13,9 @@ public class ProductList {
 	}
 	
 	public Product getProduct(String id) {
-		for (String key: products.keySet()) {
-			if(id == key) {
-				return products.get(id);
-			}
-		}
-		return null;
+		
+		return products.get(id);
+			
 	}
 	
 	

@@ -6,7 +6,8 @@ public class Receipt {
 	private List<ReceiptItem> itemList;
 	private String employeeId;
 	private String customerId;
-	private String total;
+	private String display;
+	private double total;
 	private ProductList productList;
 	
 	public Receipt(String employeeId, String customerId, String receiptId, ProductList productList) {
@@ -44,19 +45,39 @@ public class Receipt {
 			if(temp.getProductId() == productId) {
 				itemList.remove(temp);
 			}
-	};
+		}
 	}
+	
+	public ReceiptItem getItem(String productId) {
+		for (ReceiptItem temp: itemList ) {
+			if(temp.getProductId() == productId) {
+				return temp;
+			}
+		}
+		
+		return null;
+		
+	}
+	
+	public double getTotalPrice() {
+		total = 0;
+		for (ReceiptItem temp: itemList ) {
+			total += temp.getTotal();
+		}
+		return total;
+	}
+		
 	
 	public String toString() {
 		int counter = 1;
-		total = String.format("%-25s %s\n", "Employee ID:", employeeId) +
+		display = String.format("%-25s %s\n", "Employee ID:", employeeId) +
 				String.format("%-25s %s\n", "Customer ID:", customerId) +
 				String.format("%-25s %s\n", "Date:", getDate());
 		for (ReceiptItem temp: itemList ) {
-				total += counter + ") " + itemList.toString();
+				display += counter + ") " + itemList.toString();
 				counter ++;
 		}
-		return total;
+		return display;
 	}
 	
 }

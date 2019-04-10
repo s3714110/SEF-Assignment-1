@@ -1,18 +1,15 @@
 import java.util.*;
 public class ReceiptItem {
 	private String productId; 
-	private int qty; 
+	private int qty = 1; 
 	private double total;
 	private ProductList productList;
 	
-	public ReceiptItem(String productId) {
+	public ReceiptItem(String productId, ProductList productList) {
 		this.productId = productId;
-	}
-
-	//placeholder method
-	public void setProductList(ProductList productList) {
 		this.productList = productList;
 	}
+
 	
 	public String getProductId() {
 		return productId;
