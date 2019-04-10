@@ -7,6 +7,7 @@ public class Receipt {
 	private String employeeId;
 	private String customerId;
 	private String total;
+	private ProductList productList;
 	
 	public Receipt(String employeeId, String customerId, String receiptId) {
 		this.employeeId = employeeId;
@@ -18,6 +19,10 @@ public class Receipt {
 	
 	public String getReceiptId() {
 		return receiptId;
+	}
+	
+	public void setProductList(ProductList productList) {
+		this.productList = productList;
 	}
 	
 	public String getEmployeeId() {
@@ -33,11 +38,15 @@ public class Receipt {
 	}
 	
 	public void addItem(String productId) {
-		itemList.add(new ReceiptItem(productId));
+		itemList.add(new ReceiptItem(productId, productList));
 	}
 	
 	public void removeItem(String productId) {
-		itemList.remove(productId);
+		for (ReceiptItem temp: itemList ) {
+			if(temp.getProductId() == productId) {
+				itemList.remove(temp);
+			}
+	};
 	}
 	
 	public String toString() {
