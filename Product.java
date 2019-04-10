@@ -8,6 +8,7 @@ public class Product {
 	private double price;
 	private double discount;
 	private double bulkDiscount;
+	private int qtyBulkDiscount;
 
 	public Product(String id, String name, String type, double price) {
 		this.id = id;
@@ -31,12 +32,26 @@ public class Product {
 	public double getPrice() {
 		return price;
 	}
-
+	
 	public double getDiscount() {
 		return discount;
 	}
-
+	
+	public void setDiscount(double percentage) {
+		discount = percentage;
+		price = price - price * percentage%;
+	}
+	
+	public void setBulkDiscount(double percentage, int qty){
+		discounte = percentage;
+		qtyBulkDiscount = qty;
+	}
+	
 	public double getBulkDiscount() {
 		return bulkDiscount;
+	}
+	
+	public double getQtyBulkDiscount() {
+		return qtyBulkDiscount;
 	}
 }
