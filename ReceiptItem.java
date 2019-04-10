@@ -25,10 +25,15 @@ public class ReceiptItem {
 		return qty;
 	}
 	
-	public int getTotal() {
+	public double getTotal() {
 		// needs a products (collection of product) to get the single price of item
-		total = productList.getProduct(productId).getPrice() * qty;
-		return 0;
+		double singlePrice = productList.getProduct(productId).getPrice();
+		total = singlePrice * qty;
+		if (qty >= productList.getProduct(productId).getQtyBulkDiscount()) {
+			total = total - total * productList.getProduct(productId).getBulkDiscount()/100;
+		}
+		
+		return total;
 		
 	}
 	
