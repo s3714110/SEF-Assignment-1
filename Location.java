@@ -2,26 +2,22 @@ package location;
 
 public class Location {
 
-	enum FLOOR {
-	};
+public static enum FLOOR{F1,F2,F3};
 
-	enum ISLE {
-	};
+public static enum AISLE {A01,A02,A03,A04,A05,A06,A07};
 
-	enum SECTION {
-	};
+public static enum SECTION {ONE,TWO,THREE};
 
-	enum SHELF {
-	};
+public static enum SHELF {S001,S002,S003,S004};
 
 	private FLOOR floor;
-	private ISLE isle;
+	private AISLE aisle;
 	private SECTION section;
 	private SHELF shelf;
 
-	public Location(FLOOR floor, ISLE isle, SECTION section, SHELF shelf) {
+	public Location(FLOOR floor, AISLE aisle, SECTION section, SHELF shelf) {
 		this.floor = floor;
-		this.isle = isle;
+		this.aisle = aisle;
 		this.section = section;
 		this.shelf = shelf;
 	}
@@ -30,8 +26,8 @@ public class Location {
 		return floor;
 	}
 
-	public ISLE getIsle() {
-		return isle;
+	public AISLE getAisle() {
+		return aisle;
 	}
 
 	public SECTION getSection() {
