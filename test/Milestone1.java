@@ -170,7 +170,8 @@ public class Milestone1 {
 		Receipt receipt = new Receipt(employeeId, cust1.getId(), receiptId);
 		receipt.addItem(product,qty);
 		double total = receipt.getTotal();
-		assertEquals(total/10,supermarket.calculateCustomerPoints(total), 0.001 );
+		double dollarPerPoint = 10;
+		assertEquals(total/dollarPerPoint,supermarket.calculateCustomerPoints(total), 0.001 );
 	}
 	
 	
@@ -179,6 +180,8 @@ public class Milestone1 {
 	//Meaning we can't use the getCustomerPoints() method twice within the same test, as the first will get rid of the points
 	//and leave the second with no points to use.
 	//Therefore I have made the assertEquals test for the expected numerical value, not for the result of the expected equation like above.
+	//
+	//Fixed
 	
 	@Test
 	public void T8_loyaltyDiscount() {
@@ -198,8 +201,10 @@ public class Milestone1 {
 		//System.out.println(customerDiscount);
 		
 		Receipt receipt = new Receipt(employeeId, cust1.getId(), receiptId);
-		receipt.addItem(product,qty);		
-		assertEquals((double)(price*qty-10), (receipt.getTotal() - supermarket.getCustomerDiscount(cust1)),0.001);
+		receipt.addItem(product,qty);
+		
+		double points = supermarket.getCustomerDiscount(cust1);
+		assertEquals((double)(price*qty-points), (receipt.getTotal() - supermarket.getCustomerDiscount(cust1)),0.001);
 	}
 	
 	@Test
@@ -223,8 +228,10 @@ public class Milestone1 {
 		
 		Receipt receipt = new Receipt(employeeId, cust1.getId(), receiptId);
 		receipt.addItem(product,qty);
+		
+		double total = (qty*price-discount) - supermarket.getCustomerDiscount(cust1);
 
-		assertEquals(58.91, (receipt.getTotal() - supermarket.getCustomerDiscount(cust1)),0.001);
+		assertEquals(total, (receipt.getTotal()- supermarket.getCustomerDiscount(cust1)),0.001);
 	}
 	
 	@Test
@@ -248,9 +255,9 @@ public class Milestone1 {
 		Receipt receipt = new Receipt(employeeId, cust1.getId(), receiptId);
 		receipt.addItem(product,qty);
 		
-		//System.out.println(receipt.getTotal());
+		double total2 = (qty*price-qty*discount) - supermarket.getCustomerDiscount(cust1);
 
-		assertEquals(10.97, (receipt.getTotal() - supermarket.getCustomerDiscount(cust1)),0.001);
+		assertEquals(total2, (receipt.getTotal() - supermarket.getCustomerDiscount(cust1)),0.001);
 	}
 	
 	
