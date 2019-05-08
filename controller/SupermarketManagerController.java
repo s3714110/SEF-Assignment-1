@@ -1,14 +1,15 @@
 package controller;
 
 import model.SupermarketSystem;
+import view.SupermarketView;
 
 public class SupermarketManagerController extends SupermarketController{
 
 	public static enum STATE { START };
 	private STATE state;
 	
-	public SupermarketManagerController(SupermarketSystem supermarket) {
-		super(supermarket);
+	public SupermarketManagerController(SupermarketSystem supermarket, SupermarketView view, String id) {
+		super(supermarket, view);
 		state = STATE.START;
 	}
 

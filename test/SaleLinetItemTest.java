@@ -6,11 +6,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sale.SaleLineItem;
+import warehouse.Product;
 
 public class SaleLinetItemTest {
 
 	
 	final Double doubleTestAccuracy = 0.001;	
+	
+	Product product;
 	
 	String productId;
 	String productName;
@@ -25,7 +28,9 @@ public class SaleLinetItemTest {
 		qty  = 3;
 		price = 5.50;
 		
-		item = new SaleLineItem(productId,productName,qty,price);
+		product = new Product(productId, productName, "type",price);
+		
+		item = new SaleLineItem(product,qty);
 	}
 	
 	@Test
@@ -45,7 +50,7 @@ public class SaleLinetItemTest {
 			
 	@Test
 	public void test_getPrice() {
-		assertEquals(price, item.getPrice(), doubleTestAccuracy);
+		assertEquals(price, item.getUnitPrice(), doubleTestAccuracy);
 	}
 	
 	@Test
@@ -65,15 +70,6 @@ public class SaleLinetItemTest {
 		assertEquals(newQty, item.getQty());
 	}
 	
-	@Test
-	public void test_remove() {
-		int removeQty = 1;
-		
-		item.remove(removeQty);
-		
-		int newQty = qty - removeQty;
-		assertEquals(newQty, item.getQty());
-	}
 	
 	@Test
 	public void test_setDiscount() {
@@ -102,15 +98,15 @@ public class SaleLinetItemTest {
 	}
 	
 	@Test
-	public void test_setPrice() {
+	public void test_setUnitPrice() {
 		double discount = 1.0;
 		double newPrice = 3.5;
 		
 		item.setDiscount(discount);
-		item.setPrice(newPrice);
+		item.setUnitPrice(newPrice);
 		
 		double newDiscount = 0.0;
-		assertEquals(newPrice, item.getPrice(), doubleTestAccuracy);	
+		assertEquals(newPrice, item.getUnitPrice(), doubleTestAccuracy);	
 		assertEquals(newDiscount, item.getDiscount(), doubleTestAccuracy);	
 	}
 

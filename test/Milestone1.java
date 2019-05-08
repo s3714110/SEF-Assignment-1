@@ -27,19 +27,17 @@ public class Milestone1 {
 	public void T1_reduceStockLevel() {
 		String productId = "vgmt560g";
 		Product product = supermarket.getProduct(productId);
-		String productName = product.getName();
 		int qty = 200;
 		double price = product.getPrice();
 		
 		int initialStockLevel = supermarket.getStockLevel(productId);
 		
-		String employeeId = "e0004";
 		String customerId = "c000004";
 		String saleId = "r1";
 		
 		
-		Sale sale = new Sale(employeeId, customerId, saleId);
-		SaleLineItem item = new SaleLineItem(productId, productName, qty, price);
+		Sale sale = new Sale(saleId, customerId);
+		SaleLineItem item = new SaleLineItem(product, qty);
 		sale.addItem(item);
 		supermarket.processSale(sale);
 				
@@ -65,18 +63,16 @@ public class Milestone1 {
 		
 		String productId = "vgmt560g";
 		Product product = supermarket.getProduct(productId);
-		String productName = product.getName();
 		double price = product.getPrice();
 		int qty = 3;
 		
 		
-		String employeeId = "e0004";
 		String customerId = "c000004";
 		String saleId = "r1";
 		
 		
-		Sale sale = new Sale(employeeId, customerId, saleId);
-		SaleLineItem item = new SaleLineItem(productId, productName, qty, price);
+		Sale sale = new Sale(saleId, customerId);
+		SaleLineItem item = new SaleLineItem(product, qty);
 		sale.addItem(item);
 		
 	
@@ -89,24 +85,21 @@ public class Milestone1 {
 		
 		String productId = "vgmt560g";
 		Product product = supermarket.getProduct(productId);
-		String productName = product.getName();
 		int qty = 3;	
 		double price = product.getPrice();
 		
-		int bulkAmount = 1;
 		double discount = 1;
-		product.addDiscount(bulkAmount, discount);
+		supermarket.addPromotionDiscount(productId, discount);
 		
 		
-		String employeeId = "e0004";
 		String customerId = "c000004";
 		String saleId = "r1";
 		
 			
 		
-		Sale sale = new Sale(employeeId, customerId, saleId);
-		SaleLineItem item = new SaleLineItem(productId, productName, qty, price);
-		double itemDiscount = supermarket.calculateDiscount(productId, qty);
+		Sale sale = new Sale(saleId, customerId);
+		SaleLineItem item = new SaleLineItem(product, qty);
+		double itemDiscount = supermarket.calculatePromotionDiscount(productId, qty);
 		item.setDiscount(itemDiscount);
 		sale.addItem(item);
 		
@@ -123,19 +116,18 @@ public class Milestone1 {
 		double price = product.getPrice();
 		int bulkAmount = 10;
 		double discount = 10.99;
-		product.addDiscount(bulkAmount, discount);
+		supermarket.addBulkDiscount(productId, bulkAmount, discount);
 		int qty = 10;
 		
 		
-		String employeeId = "e0004";
 		String customerId = "c000004";
 		String saleId = "r1";
 		
 		
 			
-		Sale sale = new Sale(employeeId, customerId, saleId);		
-		SaleLineItem item = new SaleLineItem(productId, productName, qty, price);
-		double itemDiscount = supermarket.calculateDiscount(productId, qty);
+		Sale sale = new Sale(saleId, customerId);		
+		SaleLineItem item = new SaleLineItem(product, qty);
+		double itemDiscount = supermarket.calculateBulkDiscount(productId, qty);
 		item.setDiscount(itemDiscount);
 		sale.addItem(item);
 		
@@ -149,30 +141,27 @@ public class Milestone1 {
 		
 		String productId = "vgmt560g";		
 		Product product = supermarket.getProduct(productId);
-		String productName = product.getName();
 		double price = product.getPrice();
 		int bulkAmount = 1;
 		double discount = 1;
-		product.addDiscount(bulkAmount, discount);
+		supermarket.addBulkDiscount(productId, bulkAmount, discount);
 		int qty = 3;
 		
 		String productId2 = "vgmt220g";
 		Product product2 = supermarket.getProduct(productId2);
-		String productName2 = product.getName();
 		double price2 = product2.getPrice();
 		int qty2 = 3;
 		
 		
-		String employeeId = "e0004";
 		String customerId = "c000004";
 		String saleId = "r1";
 		
 		
-		Sale sale = new Sale(employeeId, customerId, saleId);
-		SaleLineItem item = new SaleLineItem(productId, productName, qty, price);
-		double itemDiscount = supermarket.calculateDiscount(productId, qty);
+		Sale sale = new Sale(saleId, customerId);
+		SaleLineItem item = new SaleLineItem(product, qty);
+		double itemDiscount = supermarket.calculateBulkDiscount(productId, qty);
 		item.setDiscount(itemDiscount);
-		SaleLineItem item_2 = new SaleLineItem(productId2, productName2, qty2, price2);
+		SaleLineItem item_2 = new SaleLineItem(product2, qty2);
 		sale.addItem(item);
 		sale.addItem(item_2);
 		
@@ -188,17 +177,16 @@ public class Milestone1 {
 		Customer cust1 = new Customer("123", "Harris", "41 Happy st", "041234456");
 		String productId = "vgmt560g";
 		Product product = supermarket.getProduct(productId);
-		String productName = product.getName();
+
 		double price = product.getPrice();
 		int qty = 3;
 		
 		
-		String employeeId = "e0004";
 		String saleId = "r1";
 		
 		
-		Sale sale = new Sale(employeeId, cust1.getId(), saleId);
-		SaleLineItem item = new SaleLineItem(productId, productName, qty, price);
+		Sale sale = new Sale(saleId, cust1.getId());
+		SaleLineItem item = new SaleLineItem(product, qty);
 		sale.addItem(item);
 		
 		double total = price * qty;
@@ -228,16 +216,16 @@ public class Milestone1 {
 
 		String productId = "vgmt560g";
 		Product product = supermarket.getProduct(productId);
-		String productName = product.getName();
+
 		double price = product.getPrice();
 		int qty = 3;
 		
-		
-		String employeeId = "e0004";
+
+
 		String saleId = "r1";
 		
-		Sale sale = new Sale(employeeId, cust1.getId(), saleId);
-		SaleLineItem item = new SaleLineItem(productId, productName, qty, price);
+		Sale sale = new Sale(saleId, cust1.getId());
+		SaleLineItem item = new SaleLineItem(product, qty);
 		sale.addItem(item);
 		
 		double total = price * qty;
@@ -261,7 +249,7 @@ public class Milestone1 {
 		double price = product.getPrice();
 		int bulkAmount = 10;
 		double discount = 10.99;
-		product.addDiscount(bulkAmount, discount);
+		supermarket.addBulkDiscount(productId, bulkAmount, discount);
 		int qty = 10;
 		
 		
@@ -269,9 +257,9 @@ public class Milestone1 {
 		String saleId = "r1";
 		
 		
-		Sale sale = new Sale(employeeId, cust1.getId(), saleId);
-		SaleLineItem item = new SaleLineItem(productId, productName, qty, price);
-		double itemDiscount = supermarket.calculateDiscount(productId, qty);
+		Sale sale = new Sale(saleId, cust1.getId());
+		SaleLineItem item = new SaleLineItem(product, qty);
+		double itemDiscount = supermarket.calculateBulkDiscount(productId, qty);
 		item.setDiscount(itemDiscount);
 		sale.addItem(item);
 		
@@ -293,20 +281,19 @@ public class Milestone1 {
 
 		String productId = "vgmt560g";
 		Product product = supermarket.getProduct(productId);
-		String productName = product.getName();
+
 		double price = product.getPrice();
 		int bulkAmount = 1;
 		double discount = 1;
-		product.addDiscount(bulkAmount, discount);
+		supermarket.addBulkDiscount(productId, bulkAmount, discount);
 		int qty = 3;
 		
-		String employeeId = "e0004";
 		String saleId = "r1";
 		
 		
-		Sale sale = new Sale(employeeId, cust1.getId(), saleId);
-		SaleLineItem item = new SaleLineItem(productId, productName, qty, price);
-		double itemDiscount = supermarket.calculateDiscount(productId, qty);
+		Sale sale = new Sale(saleId, cust1.getId());
+		SaleLineItem item = new SaleLineItem(product, qty);
+		double itemDiscount = supermarket.calculatePromotionDiscount(productId, qty);
 		item.setDiscount(itemDiscount);
 		sale.addItem(item);
 		

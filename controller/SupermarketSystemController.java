@@ -1,6 +1,7 @@
 package controller;
 
 import model.SupermarketSystem;
+import view.SupermarketView;
 
 public class SupermarketSystemController extends SupermarketController{
 
@@ -18,8 +19,8 @@ public class SupermarketSystemController extends SupermarketController{
 	private STATE state;
 	private LOGIN_TYPE logintype;
 	
-	public SupermarketSystemController(SupermarketSystem supermarket){
-		super(supermarket);
+	public SupermarketSystemController(SupermarketSystem supermarket, SupermarketView view){
+		super(supermarket, view);
 		state = STATE.START;
 	}
 	

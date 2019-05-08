@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +14,7 @@ import view.*;
 import warehouse.Product;
 import warehouse.Warehouse;
 import controller.*;
+import sale.Discounts;
 import sale.Sale;
 import sale.SaleLineItem;
 import user.Customer;
@@ -29,25 +31,31 @@ public class SupermarketSystem {
 	private Warehouse warehouse;	
 	
 	
-	private List<Customer> customerList;
-	private List<Manager> managerList;
-	private List<SalesStaff> salesStaffList;
-	private List<Employee> warehouseStaffList;
+	private Map<String, Customer> customerMap;
+	private Map<String, Manager> managerMap;
+	private Map<String, SalesStaff> salesStaffMap;
+	private Map<String, Employee> warehouseStaffMap;
 	
-	private List<Sale> activeSales;
+	private Map<String, Sale> activeSales;
 	private List<Sale> saleHistory;
+	
+	private List<Product> productList;
+	private Discounts discounts;
 	
 	SupermarketView supermarketView;
 	
 	public SupermarketSystem(){ 
 		warehouse = importWarehouse();
-		customerList = importCustomerList();
-		managerList = importManagerList();
-		salesStaffList = importSalesStaffList();
-		warehouseStaffList = importWarehouseStaffList();
+		customerMap = importCustomers();
+		managerMap = importManagers();
+		salesStaffMap = importSalesStaff();
+		warehouseStaffMap = importWarehouseStaff();
 		
-		activeSales = new ArrayList<Sale>();
+		activeSales = new HashMap<String, Sale>();
 		saleHistory = importSalesHistory();
+		
+		productList = warehouse.getProductList();
+		discounts = new Discounts();
 		
 		exitSystem = false;
 	}
@@ -68,17 +76,15 @@ public class SupermarketSystem {
 		this.exitSystem = exitSystem;
 	}
 	
-	// Init Functions
-
-	
+	// Import Functions	
 	private Warehouse importWarehouse() {
 		//System.out.println("importWarehouse()");
 		return new Warehouse();
 	}
 	
-	private List<Customer> importCustomerList() {
+	private Map<String, Customer> importCustomers() {
 		//System.out.println("importCustomerList()");
-		List<Customer> customerList = new ArrayList<Customer>();
+		Map<String, Customer> customerList = new HashMap<String, Customer>();
 		
 		String id = "";
 		String name = "";
@@ -101,7 +107,7 @@ public class SupermarketSystem {
 				address = customerInfo[2];
 				phoneNo = customerInfo[3];
 				
-				customerList.add(new Customer(id, name, address, phoneNo));
+				customerList.put(id, new Customer(id, name, address, phoneNo));
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -110,9 +116,9 @@ public class SupermarketSystem {
 		
 		return customerList;
 	}
-	private List<Manager> importManagerList() {
-		//System.out.println("importManagerList()");
-		List<Manager> managerList = new ArrayList<Manager>();
+	private Map<String, Manager> importManagers() {
+		//System.out.println("importManagers()");
+		Map<String, Manager> managerList = new HashMap<String, Manager>();
 		
 		String id = "";
 		String name = "";
@@ -136,7 +142,7 @@ public class SupermarketSystem {
 				address = managerInfo[2];
 				phoneNo = managerInfo[3];	
 				
-				managerList.add(new Manager(id, name, address, phoneNo));
+				managerList.put(id, new Manager(id, name, address, phoneNo));
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -146,9 +152,9 @@ public class SupermarketSystem {
 		
 		return managerList;
 	}
-	private List<SalesStaff> importSalesStaffList() {
-		//System.out.println("importSalesStaffList()");
-		List<SalesStaff> salesStaffList = new ArrayList<SalesStaff>();
+	private Map<String, SalesStaff> importSalesStaff() {
+		//System.out.println("importSalesStaff()");
+		Map<String, SalesStaff> salesStaffList = new HashMap<String, SalesStaff>();
 		
 		String id = "";
 		String name = "";
@@ -171,7 +177,7 @@ public class SupermarketSystem {
 				address = salesstaffInfo[2];
 				phoneNo = salesstaffInfo[3];				
 				
-				salesStaffList.add(new SalesStaff(id, name, address, phoneNo));
+				salesStaffList.put(id, new SalesStaff(id, name, address, phoneNo));
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -181,9 +187,9 @@ public class SupermarketSystem {
 		
 		return salesStaffList;
 	}
-	private List<Employee> importWarehouseStaffList() {
-		//System.out.println("importWarehouseStaffList()");
-		List<Employee> warehouseStaffList = new ArrayList<Employee>();
+	private Map<String, Employee> importWarehouseStaff() {
+		//System.out.println("importWarehouseStaff()");
+		Map<String, Employee> warehouseStaffList = new HashMap<String, Employee>();
 		
 		String id = "";
 		String name = "";
@@ -206,7 +212,7 @@ public class SupermarketSystem {
 				address = salesstaffInfo[2];
 				phoneNo = salesstaffInfo[3];				
 				
-				warehouseStaffList.add(new Employee(id, name, address, phoneNo));
+				warehouseStaffList.put(id, new Employee(id, name, address, phoneNo));
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -219,54 +225,77 @@ public class SupermarketSystem {
 	
 	private List<Sale> importSalesHistory(){
 		//System.out.println("importSalesHistory()");
-				List<Sale> saleHistory = new ArrayList<Sale>();
+		List<Sale> saleHistory = new ArrayList<Sale>();
+		
+		String customerId = "";
+		String saleId = "";
+		
+					 
+		BufferedReader reader;		
+		try {
+			reader = new BufferedReader(new FileReader(getClass().getResource("/SystemInfo/saleshistory.txt").getFile()));
+			
+			String line;
+			String[] salesstaffInfo;	
+			while ((line = reader.readLine()) != null) {
 				
-				String employeeId = "";
-				String customerId = "";
-				String saleId = "";
-				
-							 
-				BufferedReader reader;		
-				try {
-					reader = new BufferedReader(new FileReader(getClass().getResource("/SystemInfo/saleshistory.txt").getFile()));
+				salesstaffInfo = line.split("\t");
 					
-					String line;
-					String[] salesstaffInfo;	
-					while ((line = reader.readLine()) != null) {
+				saleId = salesstaffInfo[0];	
+				customerId = salesstaffInfo[1];
 						
-						salesstaffInfo = line.split("\t");
-											
-						employeeId = salesstaffInfo[0];
-						customerId = salesstaffInfo[1];
-						saleId = salesstaffInfo[2];			
-						
-						saleHistory.add(new Sale(employeeId, customerId, saleId));
-					}
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				 		
 				
-				return saleHistory;
+				saleHistory.add(new Sale(saleId, customerId));
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 		
+		
+		return saleHistory;
 	}
 	
 	
 	// Get Functions		
-	
-	public Customer getCustomer(String id) {
-		Customer customer = null;
-		for(int i=0; i < customerList.size(); i++) {
-			if( 0 == customerList.get(i).getId().compareTo(id)) {
-				customer = customerList.get(i);
-			}
-		}
-		return customer;
-		//return productList.get(productList.indexOf(id));
+	public Customer getCustomer(String customerId) {
+		return customerMap.get(customerId);
+	}
+	public Manager getManager(String employeeId) {
+		return managerMap.get(employeeId);
+	}
+	public SalesStaff getSalesStaff(String employeeId) {
+		return salesStaffMap.get(employeeId);
+	}
+	public Employee getWarehouseStaff(String employeeId) {
+		return warehouseStaffMap.get(employeeId);
+	}
+	public Sale getActiveSale(String customerId) {
+		return activeSales.get(customerId);
+	}
+	public List<Customer> getCustomerList() {
+		return new ArrayList<Customer>(customerMap.values());
+	}
+	public List<Manager> getManagerList() {
+		return new ArrayList<Manager>(managerMap.values());
+	}
+	public List<SalesStaff> getSalesStaffList() {
+		return new ArrayList<SalesStaff>(salesStaffMap.values());
+	}
+	public List<Employee> getWarehouseStaffList() {
+		return new ArrayList<Employee>(warehouseStaffMap.values());
+	}
+	public List<Sale> getActiveSalesList() {
+		return new ArrayList<Sale>(activeSales.values());
 	}
 	
 	
 	// Sale Functions
+	public Sale createNewSale(String customerId){
+		Sale sale = new Sale("SaleId", customerId);
+		activeSales.put(customerId, sale);
+		return sale; 
+	}
 	public void processSale(Sale sale) {
 		double customerDiscount = 0.0;
 		
@@ -284,51 +313,47 @@ public class SupermarketSystem {
 		
 		double totalTransaction = sale.getTotal() - customerDiscount;
 
+		supermarketView.showTotalTransaction(totalTransaction);
+		
 		saleHistory.add(sale);
-		//System.out.println("customerDiscount=" + Double.toString(customerDiscount));
-		//System.out.println("totalTransaction=" + Double.toString(totalTransaction));
+	}
+	public void addItem(String customerId, Product product, int qty){
+		SaleLineItem item = new SaleLineItem(product, qty);		
+		
+		// if has promotion discount (then promotion discount is applied)
+		if(discounts.hasPromotionDiscount(product.getId())) {
+			item.setDiscount(discounts.calculatePromotionDiscount(product.getId(), qty));
+		}
+		// else if has bulk discount (then bulk discount is applied)
+		else if (discounts.hasBulkDiscount(product.getId())) {
+			item.setDiscount(discounts.calculateBulkDiscount(product.getId(), qty));
+		}		
+		
+		Sale sale = getActiveSale(customerId);								
+		if(sale == null) {					
+			sale = createNewSale(customerId);
+			sale.addItem(item);
+		}
+		else {
+			sale.addItem(item);
+		}
 	}
 	
-	public double calculateDiscount(String productId, int qty) {
-		double totaldiscount = 0.0;
-		// System.out.println("\ncalculateDiscount()");
-		if(validProductId(productId)) {
-			Product product = getProduct(productId);
-		
-			Set<Integer> keys = product.getDiscounts().keySet();
-		
-			if(!keys.isEmpty()) {
-				int amount = qty;
-				double discount = 0.0;
-				int discountNum = 0;
-				
-				
-				int bulkqty = amount;
-				while(bulkqty != 0) {
-					// System.out.println("bulkqty= " + Integer.toString(bulkqty));
-					if(product.getDiscounts().containsKey(bulkqty)) {
-						discountNum = amount/bulkqty;
-						discount = product.getDiscounts().get(bulkqty);
-						totaldiscount += discount * discountNum;
-						amount = (amount - bulkqty * discountNum);
-						bulkqty = amount;
-						
-	//					System.out.println("\tdiscountNum= " + Integer.toString(discountNum));
-	//					System.out.println("\tdiscount= " + Double.toString(discount));
-	//					System.out.println("\ttotaldiscount= " + Double.toString(totaldiscount));
-	//					System.out.println("\tamount= " + Integer.toString(amount));
-	//					System.out.println("\tbulkqty= " + Integer.toString(bulkqty));
-	//					System.out.println("\t\tBREAK!!");
-						
-						continue;
-					}
-					bulkqty--;
-				}				
-				
-			}
-		}
-		//System.out.println("\nreturn totalDiscount=" + Double.toString(totaldiscount));
-		return totaldiscount;
+	// Discount Functions
+	public double calculateBulkDiscount(String productId, int qty) {
+		return discounts.calculateBulkDiscount(productId, qty);
+	}
+	public double calculatePromotionDiscount(String productId, int qty) {
+		return discounts.calculatePromotionDiscount(productId, qty);
+	}
+	public Map<Integer,Double> getBulkDiscounts(String productId) {
+		return discounts.getBulkDiscounts(productId);
+	}
+	public void addBulkDiscount(String productId, int qty, double discount) {
+		discounts.addBulkDiscount(productId, qty, discount);
+	}
+	public void addPromotionDiscount(String productId, double discount) {
+		discounts.addPromotionDiscount(productId, discount);
 	}
 	
 	
@@ -337,7 +362,7 @@ public class SupermarketSystem {
 		return warehouse.getProduct(productId);
 	}
 	public List<Product> getProductList() {
-		return warehouse.getProductList();
+		return productList;
 	}
 	public boolean validProductId(String productId){
 		return warehouse.validProductId(productId);
@@ -359,36 +384,34 @@ public class SupermarketSystem {
 	}
 	
 	public void setView_System(){
-		SupermarketSystemController supermarketController = new SupermarketSystemController(this);
-		SupermarketView supermarketView = new SupermarketSystemView(supermarketController);
-		
-		setView(supermarketView);
+		SupermarketView view = new SupermarketSystemView(this);
+		view.setController(new SupermarketSystemController(this, view));
+		setView(view);
 	}
 	
 	// Login Functions
 	public void login_Customer(String id){
-		SupermarketCustomerController supermarketController = new SupermarketCustomerController(this);
-		SupermarketView supermarketView = new SupermarketCustomerView(supermarketController);
-		
-		setView(supermarketView);
+		SupermarketView view = new SupermarketCustomerView(this);
+		view.setController(new SupermarketCustomerController(this, view, id));
+		setView(view);
 	}
 	public void login_Manager(String id){
-		SupermarketManagerController supermarketController = new SupermarketManagerController(this);
-		SupermarketView supermarketView = new SupermarketManagerView(supermarketController);
-		
+		SupermarketView view = new SupermarketManagerView(this);
+		view.setController(new SupermarketManagerController(this, view, id));
 		setView(supermarketView);
 	}
 	public void login_SalesStaff(String id){
-		SupermarketSalesStaffController supermarketController = new SupermarketSalesStaffController(this);
-		SupermarketView supermarketView = new SupermarketSalesStaffView(supermarketController);
+		
+		SupermarketView view = new SupermarketSalesStaffView(this);
+		view.setController(new SupermarketSalesStaffController(this, view, id));
 		
 		setView(supermarketView);
 	}	
 	public void login_WarehouseStaff(String id){
-		SupermarketWarehouseStaffController supermarketController = new SupermarketWarehouseStaffController(this, id);
-		SupermarketView supermarketView = new SupermarketWarehouseStaffView(supermarketController);
 		
-		setView(supermarketView);
+		SupermarketView view = new SupermarketWarehouseStaffView(this);
+		view.setController(new SupermarketWarehouseStaffController(this, view, id));
+		setView(view);
 	}
 	
 
@@ -396,52 +419,16 @@ public class SupermarketSystem {
 	
 	// User Id Functions
 	public boolean validCustomerId(String id){
-		boolean validId = false;
-		
-		for (Customer customer : customerList) { 
-		    if(0 == id.compareTo(customer.getId())) {
-		    	validId = true;
-		    	break;
-		    }
-		}
-		
-		return validId;
+		return customerMap.containsKey(id);
 	}
 	public boolean validManagerId(String id){
-		boolean validId = false;
-		
-		for (Manager manager : managerList) { 
-		    if(0 == id.compareTo(manager.getId())) {
-		    	validId = true;
-		    	break;
-		    }
-		}
-		
-		return validId;
+		return managerMap.containsKey(id);
 	}
 	public boolean validSalesStaffId(String id){
-		boolean validId = false;
-		
-		for (SalesStaff salesStaff : salesStaffList) { 
-		    if(0 == id.compareTo(salesStaff.getId())) {
-		    	validId = true;
-		    	break;
-		    }
-		}
-		
-		return validId;
+		return salesStaffMap.containsKey(id);
 	}
 	public boolean validWarehouseStaffId(String id){
-		boolean validId = false;
-		
-		for (Employee warehouseStaff : warehouseStaffList) { 
-		    if(0 == id.compareTo(warehouseStaff.getId())) {
-		    	validId = true;
-		    	break;
-		    }
-		}
-		
-		return validId;
+		return warehouseStaffMap.containsKey(id);
 	}
 	
 	// Print Functions
@@ -456,26 +443,42 @@ public class SupermarketSystem {
 	}
 	public void printCustomerList() {
 		System.out.println("printCustomerList()");
+		
+		List<Customer> customerList = getCustomerList();
 		for (Customer customer : customerList) { 
 		    System.out.println(customer.toString());
 		}
 	}
 	public void printManagerList() {
 		System.out.println("printManagerList()");
+		
+		List<Manager> managerList = getManagerList();
 		for (Manager manager : managerList) {
 			System.out.println(manager.toString());	
 		}
 	}
 	public void printSalesStaffList() {
 		System.out.println("printSalesStaffList()");
+		
+		List<SalesStaff> salesStaffList = getSalesStaffList();
 		for (SalesStaff salesStaff : salesStaffList) { 
 		    System.out.println(salesStaff.toString());
 		}
 	}
 	public void printWarehouseStaffList() {
 		System.out.println("printWarehouseStaffList()");
+		
+		List<Employee> warehouseStaffList = getWarehouseStaffList();
 		for (Employee warehouseStaff : warehouseStaffList) { 
 		    System.out.println(warehouseStaff.toString());
+		}
+	}
+	public void printActiveSales() {
+		System.out.println("printWarehouseStaffList()");
+		
+		List<Sale> activeSales = getActiveSalesList();
+		for (Sale sale : activeSales) { 
+		    System.out.println(sale.toString());
 		}
 	}
 	public void printSaleHistory() {

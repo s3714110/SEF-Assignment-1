@@ -5,16 +5,15 @@ public class Sale {
 	private final double dollarPerPoint = 10.00;
 	
 	private String saleId;
+	private String customerId;
 	private Date date;
 	private List<SaleLineItem> itemList;
-	private String employeeId;
-	private String customerId;
 	private double total;
 	
-	public Sale(String employeeId, String customerId, String saleId) {
-		this.employeeId = employeeId;
-		this.customerId = customerId;
+	public Sale(String saleId, String customerId) {
 		this.saleId = saleId;
+		this.customerId = customerId;
+
 		this.total = 0.0;
 		date = new Date();
 		itemList = new ArrayList<SaleLineItem>();
@@ -23,11 +22,7 @@ public class Sale {
 	public String getSaleId() {
 		return saleId;
 	}
-	
-	public String getEmployeeId() {
-		return employeeId;
-	}
-	
+		
 	public String getCustomerId() {
 		return customerId;
 	}
@@ -78,14 +73,11 @@ public class Sale {
 		}		
 	}
 		
-	public void removeItem(String productId, int qty) {
+	public void removeItem(String productId) {
 		
 		SaleLineItem item = getItem(productId);
 		if(item != null) {	
-			item.remove(qty);
-			if(item.getQty() <= 0) {
-				itemList.remove(item);
-			}			
+			itemList.remove(item);					
 		}
 	}
 	
@@ -93,15 +85,13 @@ public class Sale {
 		itemList.clear();
 	}
 	
-	public void setPrice(String productId, double price) {
-		double discount = 0.0;
-		
+	public void setUnitPrice(String productId, double price) {		
 		SaleLineItem item = getItem(productId);
 		if(item != null) {	
-			item.setPrice(price);
+			item.setUnitPrice(price);
 		}
 	}
-	
+		
 	public double calculateCustomerPoints() {	
 		calculateTotal();
 		return total/dollarPerPoint;		

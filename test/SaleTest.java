@@ -7,29 +7,26 @@ import org.junit.Test;
 
 import sale.Sale;
 import sale.SaleLineItem;
+import warehouse.Product;
 
 
 public class SaleTest {
 
 	static Double doubleTestAccuracy = 0.001;
 	
-	String employeeId_1;
+	
 	String customerId_1;
 	String saleId_1;
 	Sale sale;
 	
+	
 	@Before
 	public void init() {
-		employeeId_1 = "e01";
 		customerId_1 = "c01";
 		saleId_1 = "s01";
-		sale = new Sale(employeeId_1,customerId_1,saleId_1);
+		sale = new Sale(saleId_1,customerId_1);
 	}
 	
-	@Test
-	public void test_getEmployeeId() {
-		assertEquals(employeeId_1, sale.getEmployeeId());
-	}
 	
 	@Test
 	public void test_getCustomerId() {
@@ -49,8 +46,10 @@ public class SaleTest {
 		int qty = 2;
 		double price = 5.50;
 		
+		Product product = new Product(productId, productName, "type", price);
 		
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);		
+		
+		SaleLineItem item = new SaleLineItem(product, qty);		
 		sale.addItem(item);
 		
 		int listSize = 1;
@@ -61,18 +60,21 @@ public class SaleTest {
 	@Test
 	public void test_addItem_2() { // add 2 items
 		
-		String productId = "p01";
-		String productName = "product1";
+		String productId_1 = "p01";
+		String productName_1 = "product1";
 		int qty = 2;
-		double price = 5.50;
+		double price_1 = 5.50;
 		
 		String productId_2 = "p02";
 		String productName_2 = "product2";
 		int qty_2 = 5;
 		double price_2 = 10.00;
 		
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);
-		SaleLineItem item_2 = new SaleLineItem(productId_2,productName_2, qty_2, price_2);
+		Product product1 = new Product(productId_1, productName_1, "type", price_1);
+		Product product2 = new Product(productId_2, productName_2, "type",price_2);
+		
+		SaleLineItem item = new SaleLineItem(product1, qty);
+		SaleLineItem item_2 = new SaleLineItem(product2, qty_2);
 		sale.addItem(item);		
 		sale.addItem(item_2);
 		
@@ -90,9 +92,11 @@ public class SaleTest {
 		int qty = 2;
 		double price = 5.50;
 				
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);
+		Product product = new Product(productId, productName, "type", price);
+		
+		SaleLineItem item = new SaleLineItem(product, qty);
 		sale.addItem(item);	
-		sale.removeItem(productId, qty);	
+		sale.removeItem(productId);	
 		
 		int listSize = 0;
 		assertEquals(listSize, sale.getItemList().size());
@@ -103,22 +107,25 @@ public class SaleTest {
 	@Test
 	public void test_removeItem_2() { // add 2 items remove 1
 		
-		String productId = "p01";
-		String productName = "product1";
+		String productId_1 = "p01";
+		String productName_1 = "product1";
 		int qty = 2;
-		double price = 5.50;
+		double price_1 = 5.50;
 		
 		String productId_2 = "p02";
 		String productName_2 = "product2";
 		int qty_2 = 5;
 		double price_2 = 10.00;
 		
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);
-		SaleLineItem item_2 = new SaleLineItem(productId_2,productName_2, qty_2, price_2);
+		Product product1 = new Product(productId_1, productName_1, "type", price_1);
+		Product product2 = new Product(productId_2, productName_2, "type",price_2);
+		
+		SaleLineItem item = new SaleLineItem(product1, qty);
+		SaleLineItem item_2 = new SaleLineItem(product2, qty_2);
 		sale.addItem(item);		
 		sale.addItem(item_2);
 		
-		sale.removeItem(productId, qty);
+		sale.removeItem(productId_1);
 		
 		int listSize = 1;
 		assertEquals(listSize, sale.getItemList().size());
@@ -129,23 +136,27 @@ public class SaleTest {
 	@Test
 	public void test_removeItem_3() { // add 2 items remove 2
 		
-		String productId = "p01";
-		String productName = "product1";
+		String productId_1 = "p01";
+		String productName_1 = "product1";
 		int qty = 2;
-		double price = 5.50;
+		double price_1 = 5.50;
 		
 		String productId_2 = "p02";
 		String productName_2 = "product2";
 		int qty_2 = 5;
 		double price_2 = 10.00;
 		
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);
-		SaleLineItem item_2 = new SaleLineItem(productId_2,productName_2, qty_2, price_2);
+		Product product1 = new Product(productId_1, productName_1, "type", price_1);
+		Product product2 = new Product(productId_2, productName_2, "type",price_2);
+		
+		
+		SaleLineItem item = new SaleLineItem(product1, qty);
+		SaleLineItem item_2 = new SaleLineItem(product2, qty_2);
 		sale.addItem(item);		
 		sale.addItem(item_2);
 		
-		sale.removeItem(productId, qty);
-		sale.removeItem(productId_2, qty_2);
+		sale.removeItem(productId_1);
+		sale.removeItem(productId_2);
 		
 		int listSize = 0;
 		assertEquals(listSize, sale.getItemList().size());
@@ -153,43 +164,27 @@ public class SaleTest {
 		assertFalse(sale.getItemList().contains(item_2));
 	}
 	
-	@Test
-	public void test_removeItem_4() { // add 1 item with qty 5 then remove 3
-		
-		String productId = "p01";
-		String productName = "product1";
-		int qty = 5;
-		double price = 5.50;
-				
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);
-		sale.addItem(item);	
-		
-		int removeQty = 3;
-		sale.removeItem(productId, removeQty);	
-		
-		int listSize = 1;
-		int newQty = qty-removeQty;
-		assertEquals(listSize, sale.getItemList().size());
-		assertEquals(newQty, sale.getItem(productId).getQty());
-		assertTrue(sale.getItemList().contains(item));
-	}
-
+	
 	
 	@Test
 	public void test_removeAll() { 
 		
-		String productId = "p01";
-		String productName = "product1";
+		String productId_1 = "p01";
+		String productName_1 = "product1";
 		int qty = 2;
-		double price = 5.50;
+		double price_1 = 5.50;
 		
 		String productId_2 = "p02";
 		String productName_2 = "product2";
 		int qty_2 = 5;
 		double price_2 = 10.00;
 		
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);
-		SaleLineItem item_2 = new SaleLineItem(productId_2,productName_2, qty_2, price_2);
+		Product product1 = new Product(productId_1, productName_1, "type", price_1);
+		Product product2 = new Product(productId_2, productName_2, "type",price_2);
+		
+		
+		SaleLineItem item = new SaleLineItem(product1, qty);
+		SaleLineItem item_2 = new SaleLineItem(product2, qty_2);
 		sale.addItem(item);		
 		sale.addItem(item_2);
 		
@@ -209,8 +204,10 @@ public class SaleTest {
 		double discount = 3.0;
 		double price = 5.50;
 		
+		Product product = new Product(productId, productName, "type", price);
 		
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);		
+		
+		SaleLineItem item = new SaleLineItem(product, qty);		
 		sale.addItem(item);		
 		sale.getItem(productId).setDiscount(discount);
 		
@@ -219,22 +216,25 @@ public class SaleTest {
 	}
 	
 	@Test
-	public void test_setPrice() { 
+	public void test_setUnitPrice() { 
 		String productId = "p01";
 		String productName = "product1";
 		int qty = 1;
 		double price = 5.50;
 		
+		Product product = new Product(productId, productName, "type", price);
 		
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);		
+		
+		SaleLineItem item = new SaleLineItem(product, qty);		
 		sale.addItem(item);
 		
-		double newPrice = 2.75;
-		sale.setPrice(productId, newPrice);
+		double newUnitPrice = 2.75;
+		sale.setUnitPrice(productId, newUnitPrice);
 		
 		item = sale.getItem(productId);		
-		assertEquals(newPrice, item.getPrice(), doubleTestAccuracy);
+		assertEquals(newUnitPrice, item.getUnitPrice(), doubleTestAccuracy);
 	}
+	
 	
 	@Test
 	public void test_getTotal() { // 1 items
@@ -243,7 +243,10 @@ public class SaleTest {
 		int qty = 2;
 		double price = 5.50;
 		
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);
+		Product product = new Product(productId, productName, "type", price);
+		
+		
+		SaleLineItem item = new SaleLineItem(product, qty);
 		sale.addItem(item);
 		double total = price * qty;
 		assertEquals(total, sale.getTotal(), doubleTestAccuracy);
@@ -257,7 +260,10 @@ public class SaleTest {
 		double discount = 4.50;
 		double price = 5.50;
 		
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);
+		Product product = new Product(productId, productName, "type", price);
+		
+		
+		SaleLineItem item = new SaleLineItem(product, qty);
 		sale.addItem(item);
 		sale.getItem(productId).setDiscount(discount);
 		
@@ -267,11 +273,11 @@ public class SaleTest {
 	
 	@Test
 	public void test_getTotal_3() { // 2 items with discount
-		String productId = "p01";
-		String productName = "product1";
+		String productId_1 = "p01";
+		String productName_1 = "product1";
 		int qty = 2;
 		double discount = 3.0;
-		double price = 5.50;
+		double price_1 = 5.50;
 		
 		String productId_2 = "p02";
 		String productName_2 = "product2";
@@ -279,14 +285,18 @@ public class SaleTest {
 		double discount_2 = 0.0;
 		double price_2 = 10.00;
 		
-		SaleLineItem item = new SaleLineItem(productId,productName, qty, price);
-		SaleLineItem item_2 = new SaleLineItem(productId_2,productName_2, qty_2, price_2);
+		Product product1 = new Product(productId_1, productName_1, "type", price_1);
+		Product product2 = new Product(productId_2, productName_2, "type",price_2);
+		
+		
+		SaleLineItem item = new SaleLineItem(product1, qty);
+		SaleLineItem item_2 = new SaleLineItem(product2, qty_2);
 		sale.addItem(item);		
 		sale.addItem(item_2);
-		sale.getItem(productId).setDiscount(discount);
+		sale.getItem(productId_1).setDiscount(discount);
 		sale.getItem(productId_2).setDiscount(discount_2);
 		
-		double subTotal_1 = price * qty - discount;
+		double subTotal_1 = price_1 * qty - discount;
 		double subTotal_2 = price_2 * qty_2 - discount_2;
 		double total = subTotal_1 + subTotal_2;
 		

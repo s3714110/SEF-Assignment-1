@@ -1,6 +1,8 @@
 package controller;
 
 import model.SupermarketSystem;
+import view.SupermarketWarehouseStaffView;
+import view.SupermarketView;
 
 public class SupermarketWarehouseStaffController extends SupermarketController{
 
@@ -11,12 +13,14 @@ public class SupermarketWarehouseStaffController extends SupermarketController{
 	
 	
 	private STATE state;
+	private SupermarketWarehouseStaffView view;
 	
 	String employeeId;
 	
 	
-	public SupermarketWarehouseStaffController(SupermarketSystem supermarket, String employeeId) {
-		super(supermarket);
+	public SupermarketWarehouseStaffController(SupermarketSystem supermarket, SupermarketView view, String employeeId) {
+		super(supermarket, view);
+		this.view = (SupermarketWarehouseStaffView)view;
 		state = STATE.START;
 		this.employeeId = employeeId;
 	}
@@ -110,27 +114,6 @@ public class SupermarketWarehouseStaffController extends SupermarketController{
 		
 		
 		return validInput;
-	}
-	
-	public int getQty() {
-		
-		int qty = -1;
-		String userinput;
-		
-		
-		System.out.println("Enter Qty: ");		
-		userinput = getUserInput();
-		
-		try {
-			qty = Integer.parseInt(userinput);
-			
-		}
-		catch(NumberFormatException e) {
-			
-		}		
-		
-		
-		return qty;
 	}
 	
 }

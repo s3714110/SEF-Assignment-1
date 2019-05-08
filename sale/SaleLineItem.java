@@ -1,28 +1,27 @@
 package sale;
-import java.util.*;
+
+import warehouse.Product;
 public class SaleLineItem {
-	private String productId; 
-	private String productName;
+	private Product product; 
 	private int qty;
+	double unitprice;
 	private double discount;
-	private double price;
 	private double subtotal;
 	
-	public SaleLineItem(String productId, String productName, int qty, double price) {
-		this.productId = productId;
-		this.productName = productName;
-		this.qty = qty;		
-		this.price = price;
+	public SaleLineItem(Product product, int qty) {
+		this.product = product;
+		this.qty = qty;	
+		unitprice = product.getPrice();
 		discount = 0.0;
 		subtotal = 0.0;
 	}
 
 	public String getProductId() {
-		return productId;
+		return product.getId();
 	}
 	
 	public String getProductName() {
-		return productName;
+		return product.getName();
 	}
 	
 	public int getQty() {
@@ -33,8 +32,8 @@ public class SaleLineItem {
 		return discount;
 	}
 	
-	public double getPrice() {
-		return price;
+	public double getUnitPrice() {
+		return unitprice;
 	}
 	
 	public double getSubtotal() {	
@@ -43,7 +42,7 @@ public class SaleLineItem {
 	}
 	
 	private void calculateSubtotal() {
-		this.subtotal = price * qty - discount;
+		this.subtotal = product.getPrice() * qty - discount;
 	}
 	
 		
@@ -51,16 +50,12 @@ public class SaleLineItem {
 		this.qty += qty;
 	}
 	
-	public void remove(int qty) {
-		this.qty -= qty;
-	}
-	
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
 	
-	public void setPrice(double price) {
-		this.price = price;
+	public void setUnitPrice(double price) {
+		this.unitprice = price;
 		this.discount = 0.0;
 	}
 	
@@ -74,7 +69,7 @@ public class SaleLineItem {
 		boolean equal = false;
 		
 	    SaleLineItem item = (SaleLineItem)object;
-        if (0 == productId.compareTo(item.getProductId())) {
+        if (0 == product.getId().compareTo(item.getProductId())) {
            equal = true;
         }
 	    

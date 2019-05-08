@@ -1,13 +1,20 @@
 package view;
 
+import controller.SupermarketController;
+import controller.SupermarketCustomerController;
 import controller.SupermarketWarehouseStaffController;
+import model.SupermarketSystem;
 
-public class SupermarketWarehouseStaffView implements SupermarketView {
+public class SupermarketWarehouseStaffView extends SupermarketView {
 
 	SupermarketWarehouseStaffController controller;
 	
-	public SupermarketWarehouseStaffView(SupermarketWarehouseStaffController controller) {
-		this.controller = controller;
+	public SupermarketWarehouseStaffView(SupermarketSystem supermarket) {
+		super(supermarket);
+	}
+	
+	public void setController(SupermarketController controller) {
+		this.controller = (SupermarketWarehouseStaffController)controller;
 	}
 	
 	
@@ -34,7 +41,7 @@ public class SupermarketWarehouseStaffView implements SupermarketView {
 		String show = "\n\n";
 		
 		show = show.concat("welcome " + controller.getEmployeeId() + "\n");
-		show = show.concat("\tRestock    :  1\n");
+		show = show.concat("\tRestock     :  1\n");
 		show = show.concat("\tCheck Stock :  2\n");
 		show = show.concat("\tTo Logout enter 'logout'\n");
 		

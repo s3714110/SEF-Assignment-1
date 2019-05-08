@@ -1,7 +1,7 @@
 vgmt220g	Vegemite 220g	Spreads	3.88
 vgmt380g	Vegemite 380g	Spreads	6.50
 vgmt560g	Vegemite 560g	Spreads	7.99
-nt400g	Nutella Hazelnut Spread 400g	Spreads	4.00
+nt400g	Nutella 400g	Spreads	4.00
 fpra560g	Flora Pro-activ 500g	Spreads	8.00
 fpra750g	Flora Pro-activ 750g	Spreads	10.00
 asf10pk	Atlantic Salmon Fillets 10pk	Fish	30.00

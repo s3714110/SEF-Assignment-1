@@ -1,13 +1,19 @@
 package view;
 
+import controller.SupermarketController;
 import controller.SupermarketManagerController;
+import model.SupermarketSystem;
 
-public class SupermarketManagerView implements SupermarketView {
+public class SupermarketManagerView extends SupermarketView {
 
 	SupermarketManagerController controller;
 	
-	public SupermarketManagerView(SupermarketManagerController controller) {
-		this.controller = controller;
+	public SupermarketManagerView(SupermarketSystem supermarket) {
+		super(supermarket);
+	}
+	
+	public void setController(SupermarketController controller) {
+		this.controller = (SupermarketManagerController)controller;
 	}
 	
 	
