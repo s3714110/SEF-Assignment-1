@@ -134,7 +134,7 @@ public class SupermarketCustomerController extends SupermarketController {
 						
 				do {
 					qty = getQty();
-				} while (qty < 0);
+				} while (qty <= 0);
 				 
 				
 				int index = selected - 1;

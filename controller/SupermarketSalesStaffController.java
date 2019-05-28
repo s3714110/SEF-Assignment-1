@@ -1,18 +1,14 @@
 package controller;
 
 import model.SupermarketSystem;
+import view.SupermarketView;
 
 public class SupermarketSalesStaffController extends SupermarketController{
-	public static enum STATE { START, VIEWACTIVESALE, EDITSALE, VOIDSALE };
-
-	public final static String viewactivesale = "1";
-	public final static String editsale = "2";
-	public final static String voidsale = "3";
-	
+	public static enum STATE { START };
 	private STATE state;
 	
-	public SupermarketSalesStaffController(SupermarketSystem supermarket) {
-		super(supermarket);
+	public SupermarketSalesStaffController(SupermarketSystem supermarket, SupermarketView view, String id) {
+		super(supermarket, view);
 		state = STATE.START;
 	}
 
@@ -37,69 +33,18 @@ public class SupermarketSalesStaffController extends SupermarketController{
 			case START:
 				validInput = processStart(userinput);
 				break;
-			case VIEWACTIVESALE:
-				validInput = showActiveSale(userinput);
-				break;
-			case EDITSALE:
-				validInput = processEditSale(userinput);
-				break;
-			case VOIDSALE:
-				validInput = processVoidSale(userinput);
-				break;
 		}
 		
 		return validInput;
-	}	
-		
+	}
+	
+	
 	
 	public boolean processStart(String userinput) {
 		boolean validInput = false;
 		
-		if (0 == userinput.compareTo(viewactivesale))
-		{
-			state = STATE.VIEWACTIVESALE;
-			validInput = true;
-		}
 		
-		else if (0 == userinput.compareTo(editsale))
-		{
-			state = STATE.EDITSALE;
-			validInput = true;
-		}
-		
-		else if (0 == userinput.compareTo(voidsale))
-		{
-			state = STATE.VOIDSALE;
-			validInput = true;
-		}
 		
 		return validInput;
-	}
-	
-	public boolean showActiveSale(String userinput)
-	{
-		if (supermarket.validCustomerId(userinput))
-		{
-			
-			
-			
-			
-		}
-		
-		return false;
-	}
-	
-	public boolean processEditSale(String userinput)
-	{
-		
-		return false;
-	}
-	
-	
-	
-	public boolean processVoidSale(String userinput)
-	{
-		
-		return false;
 	}
 }

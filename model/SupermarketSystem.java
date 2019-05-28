@@ -306,13 +306,13 @@ public class SupermarketSystem {
 			warehouse.take(item.getProductId(), item.getQty());
 		}
 		
-		Customer customer = getCustomer(sale.getCustomerId());
-		customer.addPoints(sale.calculateCustomerPoints());		
+		Customer customer = getCustomer(sale.getCustomerId());			
 		customerDiscount = customer.getCustomerDiscount();
 		customer.consumePoints();
 		
 		double totalTransaction = sale.getTotal() - customerDiscount;
-
+		customer.addPoints(sale.calculateCustomerPoints());	
+		
 		supermarketView.showTotalTransaction(totalTransaction);
 		
 		saleHistory.add(sale);

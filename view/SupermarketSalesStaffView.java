@@ -1,14 +1,20 @@
 package view;
 
+import controller.SupermarketController;
 import controller.SupermarketSalesStaffController;
+import model.SupermarketSystem;
 
-public class SupermarketSalesStaffView implements SupermarketView {
+public class SupermarketSalesStaffView extends SupermarketView {
 
 	
 	SupermarketSalesStaffController controller;
 	
-	public SupermarketSalesStaffView(SupermarketSalesStaffController controller) {
-		this.controller = controller;
+	public SupermarketSalesStaffView(SupermarketSystem supermarket) {
+		super(supermarket);
+	}
+	
+	public void setController(SupermarketController controller) {
+		this.controller = (SupermarketSalesStaffController)controller;
 	}
 	
 	
@@ -19,15 +25,6 @@ public class SupermarketSalesStaffView implements SupermarketView {
 			case START:
 				showStart();
 				break;
-			case VIEWACTIVESALE:
-				showActiveSale();
-				break;
-			case EDITSALE:
-				showEditSale();
-				break;
-			case VOIDSALE:
-				showVoidSale();				
-				break;
 		}
 		
 		String userinput = controller.getUserInput();
@@ -35,8 +32,7 @@ public class SupermarketSalesStaffView implements SupermarketView {
 		
 	}
 	
-	public void showStart() 
-	{
+	public void showStart() {
 		String show = "\n\n";
 		
 		show = show.concat("Sales Staff Show Start\n");
@@ -44,35 +40,5 @@ public class SupermarketSalesStaffView implements SupermarketView {
 		
 		System.out.println(show);
 	}
-	
-	private void showActiveSale()
-	{
-		
-		
-		
-	}
-	
-	private void showEditSale()
-	{
-		String show = "\n\n";
-		
-		show = show.concat("Enter Customer Id: ");
-		
-		System.out.println(show);
-	}
-	
-	
-	private void showVoidSale()
-	{
-		String show = "\n\n";
-		
-		show = show.concat("Enter Customer Id: ");
-		
-		System.out.println(show);
-	}
-
-
-
-	
 	
 }
