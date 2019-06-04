@@ -1,10 +1,10 @@
 c000001	Emma Kelly	12 Elizabeth st, Melbourne, Vic, 3000	0400111111
 c000002	Dan Kelly	120 Exhibition st, Melbourne, Vic, 3000	0400111111
-c000003	The Last Stylebender	152 Quay st, Auckland, 1010, Auckland	+64412678965
+c000003	The Last Stylebender	152 Quay st, Auckland, 1010	+64412678965
 c000004	Ned Kelly	166 Elizabeth st, Melbourne, Vic, 3000	0400111111
 c000005	Jenny Flynn	12 Flinders st, Melbourne, Vic, 3000	0400111111
-c000006	Anne O'Neil	100/12 Queen st, Melbourne, Vic, 3000	0400111111
+c000006	Anne O'Neil	100/12 Queen st, Melbourne, Vic, 3100	0400111111
 c000007	Paul Kelly	93/12 Queen st, Melbourne, Vic, 3000	0400111111
-c000008	Emma Johnson	12 Elizabeth st, Melbourne, Vic, 3000	0400111111
-c000009	John Baker	23/14 Anthony st, Melbourne, Vic, 3000	0400111111
+c000008	Emma Johnson	12 Elizabeth st, Melbourne, Vic, 3100	0400111111
+c000009	John Baker	23/14 Anthony st, Melbourne, Vic, 3005	0400111111
 c000010	Coco Channel	22/14 Anthony st, Melbourne, Vic, 3000	0400111111

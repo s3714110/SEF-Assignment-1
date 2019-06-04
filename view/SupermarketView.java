@@ -23,6 +23,9 @@ public abstract class SupermarketView {
 	
 	public abstract void show();
 	
+	public void showMessage(String message) {
+		System.out.println("\n" + message + "\n");
+	}
 	public void showSale(Sale sale) {
 		
 		int count = 0;
@@ -80,10 +83,16 @@ public abstract class SupermarketView {
 		output = "--------------------------------------";
 		System.out.println(output);
 		
-		for (Sale sale : saleList) {
-			count++;
-			output = String.format("%2d |   %-7s", count, sale.getCustomerId());
+		if(saleList.size() == 0) {
+			output = "\n\tNo Active Sales";
 			System.out.println(output);
+		}
+		else {
+			for (Sale sale : saleList) {
+				count++;
+				output = String.format("%2d |   %-7s", count, sale.getCustomerId());
+				System.out.println(output);
+			}
 		}
 	}
 	

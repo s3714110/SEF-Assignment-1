@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import view.*;
 import warehouse.Product;
+import warehouse.Supplier;
 import warehouse.Warehouse;
 import controller.*;
 import sale.Discounts;
@@ -42,6 +44,10 @@ public class SupermarketSystem {
 	private List<Product> productList;
 	private Discounts discounts;
 	
+	private Map<String, Double> salePercentage;
+	private Map<String, Integer> saleQuantity;
+	private double totalSale;
+	
 	SupermarketView supermarketView;
 	
 	public SupermarketSystem(){ 
@@ -56,6 +62,10 @@ public class SupermarketSystem {
 		
 		productList = warehouse.getProductList();
 		discounts = new Discounts();
+		
+		salePercentage = new HashMap<>();
+		saleQuantity = new HashMap<>();
+		totalSale = 0;
 		
 		exitSystem = false;
 	}
@@ -224,35 +234,48 @@ public class SupermarketSystem {
 	}
 	
 	private List<Sale> importSalesHistory(){
-		//System.out.println("importSalesHistory()");
 		List<Sale> saleHistory = new ArrayList<Sale>();
-		
+
 		String customerId = "";
 		String saleId = "";
-		
-					 
-		BufferedReader reader;		
+		int counter = 0;
+
+		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader(getClass().getResource("/SystemInfo/saleshistory.txt").getFile()));
-			
+			reader = new BufferedReader(
+					new FileReader(getClass().getResource("/SystemInfo/saleshistory.txt").getFile()));
+
 			String line;
-			String[] salesstaffInfo;	
+			String[] salesstaffInfo;
 			while ((line = reader.readLine()) != null) {
+
+				Scanner token = new Scanner(line);
+				token.useDelimiter("\t");
 				
-				salesstaffInfo = line.split("\t");
-					
-				saleId = salesstaffInfo[0];	
-				customerId = salesstaffInfo[1];
-						
+				saleId = token.next();
+				customerId = token.next();
 				
+
 				saleHistory.add(new Sale(saleId, customerId));
+
+				while (token.hasNext()) {
+					Scanner saleToken = new Scanner(token.next());
+					saleToken.useDelimiter(",");
+					String id = saleToken.next();
+					int qty = Integer.parseInt(saleToken.next());
+					double subTotal = Double.parseDouble(saleToken.next());
+
+					saleHistory.get(counter).addItem(new SaleLineItem(warehouse.getProduct(id), qty));
+					saleHistory.get(counter).getItem(id).setSubTotal(subTotal);
+
+				}
+				counter++;
 			}
 			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		 		
-		
+
 		return saleHistory;
 	}
 	
@@ -339,6 +362,90 @@ public class SupermarketSystem {
 		}
 	}
 	
+	public double getTotalSale() {
+		totalSale = 0;
+		for (Sale sale : saleHistory) {
+			for (SaleLineItem saleLineItem : sale.getItemList()) {
+				totalSale += saleLineItem.getSubtotal();
+			}
+		}
+		
+		return totalSale;
+	}
+	
+	public SaleLineItem[] getMostSoldItems() {
+		SaleLineItem[] mostSoldItems = new SaleLineItem[(warehouse.getProductList().size())];
+	
+		
+		SaleLineItem temp;
+
+		for (int i = 0; i < mostSoldItems.length; i++) {
+
+			if (mostSoldItems[i] == null) {
+				mostSoldItems[i] = new SaleLineItem(warehouse.getProductList().get(i),0);
+			}
+
+		}
+		
+		
+
+		for (int i = 0; i < mostSoldItems.length; i++) {
+			for (Sale sale : saleHistory) {
+				for (SaleLineItem saleLineItem : sale.getItemList()) {
+					if (0 == mostSoldItems[i].getProductId().compareTo(saleLineItem.getProductId())) {
+						
+						
+						double percentage = 0;
+						int quantity = 0;
+						mostSoldItems[i].setSubTotal(mostSoldItems[i].getSubtotal() + saleLineItem.getSubtotal());
+
+						mostSoldItems[i].add(saleLineItem.getQty());
+						quantity = mostSoldItems[i].getQty();
+
+						percentage = (mostSoldItems[i].getSubtotal() / getTotalSale())*100 ;
+
+						salePercentage.put(mostSoldItems[i].getProductId(), percentage);
+						saleQuantity.put(mostSoldItems[i].getProductId(), quantity);
+						
+					
+					}
+				}
+
+			}
+		}
+
+		for (int i = 0; i < mostSoldItems.length; i++) {
+			for (int j = i + 1; j < mostSoldItems.length; j++) {
+				if(mostSoldItems[i].getSubtotal() < mostSoldItems[j].getSubtotal()) {
+					temp = mostSoldItems[i];
+					mostSoldItems[i] = mostSoldItems[j];
+					mostSoldItems[j] = temp;
+					
+				}
+			}
+		}
+		// Collections.sort(mostSoldItems, Collections.reverseOrder());
+
+		return mostSoldItems;
+
+	}
+
+	public Map<String, Double> getSalePercentage() {
+
+		return salePercentage;
+
+	}
+	
+	public Map<String, Integer> getSaleQuantity() {
+
+		return saleQuantity;
+
+	}
+	
+	public Map<String, Supplier> getSuppliers() {
+		return warehouse.getSuppliers();
+	}
+	
 	// Discount Functions
 	public double calculateBulkDiscount(String productId, int qty) {
 		return discounts.calculateBulkDiscount(productId, qty);
@@ -352,8 +459,34 @@ public class SupermarketSystem {
 	public void addBulkDiscount(String productId, int qty, double discount) {
 		discounts.addBulkDiscount(productId, qty, discount);
 	}
+	
+	public void removeBulkDiscount(String productId, int qty) {
+		discounts.removeBulkDiscount(productId, qty);
+	}
+	
+	public void removeAllBulkDiscount(String productId) {
+		discounts.removeBulkDiscountAll(productId);
+	}
+	public boolean hasBulkDiscount(String productId) {
+		return discounts.hasBulkDiscount(productId);
+	}
 	public void addPromotionDiscount(String productId, double discount) {
 		discounts.addPromotionDiscount(productId, discount);
+	}
+	
+	public void removePromotionDiscount(String productId) {
+		discounts.removePromotionDiscount(productId);
+	}
+	
+	public boolean hasPromotionDiscount(String productId) {
+		return discounts.hasPromotionDiscount(productId);
+	}
+	
+	public double getPromotionalDiscount(String productId) {
+		return discounts.getPromotionDiscount(productId);
+	}
+	public void removeSale(String customerId) {
+		activeSales.remove(customerId);
 	}
 	
 	
@@ -372,6 +505,9 @@ public class SupermarketSystem {
 	}
 	public void take(String productId, int qty) {
 		warehouse.take(productId, qty);
+		if (warehouse.getStockLevel(productId) < warehouse.getProduct(productId).getReplenishLevel()) {
+			warehouse.restock(productId, warehouse.getProduct(productId).getRestockQty());
+		}
 	}
 	public int getStockLevel(String productId) {
 		return warehouse.getStockLevel(productId);
@@ -398,14 +534,14 @@ public class SupermarketSystem {
 	public void login_Manager(String id){
 		SupermarketView view = new SupermarketManagerView(this);
 		view.setController(new SupermarketManagerController(this, view, id));
-		setView(supermarketView);
+		setView(view);
 	}
 	public void login_SalesStaff(String id){
 		
 		SupermarketView view = new SupermarketSalesStaffView(this);
 		view.setController(new SupermarketSalesStaffController(this, view, id));
 		
-		setView(supermarketView);
+		setView(view);
 	}	
 	public void login_WarehouseStaff(String id){
 		
@@ -477,8 +613,14 @@ public class SupermarketSystem {
 		System.out.println("printWarehouseStaffList()");
 		
 		List<Sale> activeSales = getActiveSalesList();
-		for (Sale sale : activeSales) { 
-		    System.out.println(sale.toString());
+		System.out.println("Active Sales Size: " + activeSales.size());
+		if(activeSales.size() == 0) {
+			System.out.println("No Active Sales");
+		}
+		else {
+			for (Sale sale : activeSales) { 
+			    System.out.println(sale.toString());
+			}
 		}
 	}
 	public void printSaleHistory() {

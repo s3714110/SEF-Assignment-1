@@ -65,7 +65,7 @@ public class SupermarketCustomerView extends SupermarketView {
 		String show = "\n\n";
 		
 		String customerId = controller.getCustomerId();
-		show = show.concat("Welcome " + supermarket.getCustomer(customerId).getName() + "(" + customerId + ")\n");
+		show = show.concat(supermarket.getCustomer(customerId).getName() + "(" + customerId + ")\n");
 		show = show.concat("\tAdd Product         :  1\n");
 		show = show.concat("\tCheck Price         :  2\n");
 		show = show.concat("\tCheck Bulk Discount :  3\n");

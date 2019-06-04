@@ -14,11 +14,12 @@ public class Warehouse {
 	private Map<String, Product> productMap;
 	private Map<String, Integer> inventory;
 	private Map<String, Location> productLocation;
-	private Map<String, List<Supplier>> suppliers;
+	private Map<String, Supplier> suppliers;
 	
 	public Warehouse(){
 		productMap = importProductMap();
 		inventory = importInventory();
+		suppliers = new HashMap<>();
 	}
 	
 	private Map<String, Product> importProductMap() {
@@ -123,6 +124,10 @@ public class Warehouse {
 	
 	public boolean validProductId(String productId) {
 		return productMap.containsKey(productId);
+	}
+	
+	public Map<String, Supplier> getSuppliers() {
+		return suppliers;
 	}
 	
 	public void printInventory() {
