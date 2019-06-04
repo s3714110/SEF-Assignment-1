@@ -50,6 +50,10 @@ public class SaleLineItem {
 		this.qty += qty;
 	}
 	
+	public void setQty(int qty) {
+		this.qty = qty;
+	}
+	
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}

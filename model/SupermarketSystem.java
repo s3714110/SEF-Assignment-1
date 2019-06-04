@@ -356,6 +356,10 @@ public class SupermarketSystem {
 		discounts.addPromotionDiscount(productId, discount);
 	}
 	
+	public void removeSale(String customerId) {
+		activeSales.remove(customerId);
+	}
+	
 	
 	// Warehouse Functions
 	public Product getProduct(String productId) {
@@ -405,7 +409,7 @@ public class SupermarketSystem {
 		SupermarketView view = new SupermarketSalesStaffView(this);
 		view.setController(new SupermarketSalesStaffController(this, view, id));
 		
-		setView(supermarketView);
+		setView(view);
 	}	
 	public void login_WarehouseStaff(String id){
 		
@@ -477,8 +481,14 @@ public class SupermarketSystem {
 		System.out.println("printWarehouseStaffList()");
 		
 		List<Sale> activeSales = getActiveSalesList();
-		for (Sale sale : activeSales) { 
-		    System.out.println(sale.toString());
+		System.out.println("Active Sales Size: " + activeSales.size());
+		if(activeSales.size() == 0) {
+			System.out.println("No Active Sales");
+		}
+		else {
+			for (Sale sale : activeSales) { 
+			    System.out.println(sale.toString());
+			}
 		}
 	}
 	public void printSaleHistory() {
