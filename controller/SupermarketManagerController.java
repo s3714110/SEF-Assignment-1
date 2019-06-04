@@ -77,32 +77,32 @@ public class SupermarketManagerController extends SupermarketController {
 		boolean validInput = false;
 		boolean found = supermarket.validProductId(userinput);
 		if (found) {
-			System.out.printf("Product %s : Stock level: %s, Replenish Level: %s, Automatic restock quantity: %s \n",
+		
+			view.showMessage(String.format("Product %s : Stock level: %s, Replenish Level: %s, Automatic restock quantity: %s \n",
 					supermarket.getProduct(userinput).getName(), supermarket.getStockLevel(userinput),
 					supermarket.getProduct(userinput).getReplenishLevel(),
-					supermarket.getProduct(userinput).getRestockQty());
-
-			System.out.println("\tRestock product         :      1");
-			System.out.println("\tSet Replenish Level     :      2");
-			System.out.println("\tSet restock quantity    :      3");
-			System.out.println("\tGo back to menu         :      4");
+					supermarket.getProduct(userinput).getRestockQty()));
+			view.showMessage("\tRestock product         :      1");
+			view.showMessage("\tSet Replenish Level     :      2");
+			view.showMessage("\tSet restock quantity    :      3");
+			view.showMessage("\tGo back to menu         :      4");
 
 			Scanner stockScanner = new Scanner(System.in);
 			String input = stockScanner.nextLine();
 			switch (input) {
 			case "1":
-				System.out.println("Enter the amount you want to restock: ");
+				view.showMessage("Enter the amount you want to restock: ");
 				String stockqty = stockScanner.nextLine();
 				try {
 					int stockQty = Integer.parseInt(stockqty);
 					supermarket.restock(userinput, stockQty);
 					validInput = true;
 				} catch (NumberFormatException e) {
-					System.out.println("Invalid input");
+					view.showMessage("Invalid input");
 				}
 				break;
 			case "2":
-				System.out.println("Enter the replenish level: ");
+				view.showMessage("Enter the replenish level: ");
 				String stockrep = stockScanner.nextLine();
 				try {
 					int stockRep = Integer.parseInt(stockrep);
@@ -110,11 +110,11 @@ public class SupermarketManagerController extends SupermarketController {
 					validInput = true;
 					
 				} catch (NumberFormatException e) {
-					System.out.println("Invalid input");
+					view.showMessage("Invalid input");
 				}
 				break;
 			case "3":
-				System.out.println("Enter the automatic restock level: ");
+				view.showMessage("Enter the automatic restock level: ");
 				String stockrestock = stockScanner.nextLine();
 				try {
 					int stockRestock = Integer.parseInt(stockrestock);
@@ -122,7 +122,7 @@ public class SupermarketManagerController extends SupermarketController {
 					validInput = true;
 					
 				} catch (NumberFormatException e) {
-					System.out.println("Invalid input");
+					view.showMessage("Invalid input");
 				}
 				break;
 			case "4":
@@ -133,7 +133,7 @@ public class SupermarketManagerController extends SupermarketController {
 			}
 
 		} else {
-			System.out.println("Product not found!");
+			view.showMessage("Product not found!");
 		}
 		return validInput;
 	}
@@ -142,25 +142,25 @@ public class SupermarketManagerController extends SupermarketController {
 		boolean validInput = false;
 		boolean found = supermarket.validProductId(userinput);
 		if (found) {
-			System.out.println("Current bulk discount on product " + supermarket.getProduct(userinput).getName());
+			view.showMessage("Current bulk discount on product " + supermarket.getProduct(userinput).getName());
 			if (!supermarket.hasBulkDiscount(userinput)) {
-				System.out.println("None");
+				view.showMessage("None");
 			} else {
 				supermarket.getBulkDiscounts(userinput)
-						.forEach((k, v) -> System.out.println("Quantity: " + k + ", Discount percentage: " + v*100 + "%"));
+						.forEach((k, v) -> view.showMessage("Quantity: " + k + ", Discount percentage: " + v*100 + "%"));
 			}
 
-			System.out.println("\tAdd/replace bulk sale   :      1");
-			System.out.println("\tRemove bulk sale        :      2");
-			System.out.println("\tGo back to menu         :      3");
+			view.showMessage("\tAdd/replace bulk sale   :      1");
+			view.showMessage("\tRemove bulk sale        :      2");
+			view.showMessage("\tGo back to menu         :      3");
 
 			Scanner bulkScanner = new Scanner(System.in);
 			String input = bulkScanner.nextLine();
 			switch (input) {
 			case "1":
-				System.out.println("Enter the quantity for the bulk sale you want to add: ");
+				view.showMessage("Enter the quantity for the bulk sale you want to add: ");
 				String bulkqtyadd = bulkScanner.nextLine();
-				System.out.println("Enter the percentage for the bulk sale you want to add: ");
+				view.showMessage("Enter the percentage for the bulk sale you want to add: ");
 				String bulkperadd = bulkScanner.nextLine();
 				try {
 					int bulkQtyAdd = Integer.parseInt(bulkqtyadd);
@@ -169,11 +169,11 @@ public class SupermarketManagerController extends SupermarketController {
 					validInput = true;
 
 				} catch (NumberFormatException e) {
-					System.out.println("Invalid input");
+					view.showMessage("Invalid input");
 				}
 				break;
 			case "2":
-				System.out.println("Enter the quantity for the bulk sale you want to remove(0 to remove all: ");
+				view.showMessage("Enter the quantity for the bulk sale you want to remove(0 to remove all: ");
 				String bulkqtyremove = bulkScanner.nextLine();
 				try {
 					int bulkQtyRemove = Integer.parseInt(bulkqtyremove);
@@ -185,11 +185,11 @@ public class SupermarketManagerController extends SupermarketController {
 
 						validInput = true;
 					} else {
-						System.out.println("Incorrect value!");
+						view.showMessage("Incorrect value!");
 					}
 
 				} catch (NumberFormatException e) {
-					System.out.println("Invalid input");
+					view.showMessage("Invalid input");
 				}
 				break;
 			case "3":
@@ -198,7 +198,7 @@ public class SupermarketManagerController extends SupermarketController {
 				break;
 			}
 		} else {
-			System.out.println("Product not found!");
+			view.showMessage("Product not found!");
 		}
 		return validInput;
 	}
@@ -207,20 +207,20 @@ public class SupermarketManagerController extends SupermarketController {
 		boolean validInput = false;
 		boolean found = supermarket.validProductId(userinput);
 		if (found) {
-			System.out.printf("Product %s price: $ %.2f \n", supermarket.getProduct(userinput).getName(),
-					supermarket.getProduct(userinput).getPrice());
+			view.showMessage(String.format("Product %s price: $ %.2f \n", supermarket.getProduct(userinput).getName(),
+					supermarket.getProduct(userinput).getPrice()));
 			if(supermarket.hasPromotionDiscount(userinput)) {
 				System.out.printf("Product current discounted price: $ %.2f \n", supermarket.getPromotionalDiscount(userinput));
 			}
-			System.out.println("\tChange product price    :      1");
-			System.out.println("\tSet promotional discount:      2");
-			System.out.println("\tGo back to menu         :      3");
+			view.showMessage("\tChange product price    :      1");
+			view.showMessage("\tSet promotional discount:      2");
+			view.showMessage("\tGo back to menu         :      3");
 			@SuppressWarnings("resource")
 			Scanner priceScanner = new Scanner(System.in);
 			String input = priceScanner.nextLine();
 			switch (input) {
 			case "1":
-				System.out.println("Enter new price: ");
+				view.showMessage("Enter new price: ");
 				String priceInput = priceScanner.nextLine();
 
 				try {
@@ -230,11 +230,11 @@ public class SupermarketManagerController extends SupermarketController {
 					validInput = true;
 
 				} catch (NumberFormatException e) {
-					System.out.println("Invalid input");
+					view.showMessage("Invalid input");
 				}
 				break;
 			case "2":
-				System.out.println("Enter discounted price (O to remove promotion): ");
+				view.showMessage("Enter discounted price (O to remove promotion): ");
 				String discountinput = priceScanner.nextLine();
 				try {
 					double discount = Double.parseDouble(discountinput);
@@ -249,11 +249,11 @@ public class SupermarketManagerController extends SupermarketController {
 						validInput = true;
 					}
 					else {
-						System.out.println("Invalid input");
+						view.showMessage("Invalid input");
 					}
 					
 				} catch (NumberFormatException e) {
-					System.out.println("Invalid input");
+					view.showMessage("Invalid input");
 				}
 			case "3":
 				state = STATE.START;
@@ -262,7 +262,7 @@ public class SupermarketManagerController extends SupermarketController {
 			}
 
 		} else {
-			System.out.println("Product not found!");
+			view.showMessage("Product not found!");
 		}
 		return validInput;
 	}
@@ -272,25 +272,25 @@ public class SupermarketManagerController extends SupermarketController {
 		boolean found = supermarket.validProductId(userinput);
 		if (found) {
 			if (supermarket.getSuppliers().containsKey(userinput)) {
-				System.out.println("Supplier ID: " + supermarket.getSuppliers().get(userinput).getId());
-				System.out.println("Supplier Name: " + supermarket.getSuppliers().get(userinput).getName());
+				view.showMessage("Supplier ID: " + supermarket.getSuppliers().get(userinput).getId());
+				view.showMessage("Supplier Name: " + supermarket.getSuppliers().get(userinput).getName());
 
 			} else {
-				System.out.println("This item doesn't have supplier details");
+				view.showMessage("This item doesn't have supplier details");
 			}
 
-			System.out.println("\tUpdate supplier detail  :      1");
-			System.out.println("\tGo back to menu         :      2");
+			view.showMessage("\tUpdate supplier detail  :      1");
+			view.showMessage("\tGo back to menu         :      2");
 
 			@SuppressWarnings("resource")
 			Scanner supplierScanner = new Scanner(System.in);
 			String supplierInput = supplierScanner.nextLine();
 			switch (supplierInput) {
 			case "1":
-				System.out.println("Enter supplier ID: ");
+				view.showMessage("Enter supplier ID: ");
 				String supplierID = supplierScanner.nextLine();
 
-				System.out.println("Enter supplier name: ");
+				view.showMessage("Enter supplier name: ");
 				String supplierName = supplierScanner.nextLine();
 
 				supermarket.getSuppliers().put(userinput, new Supplier(supplierID, supplierName));
@@ -303,7 +303,7 @@ public class SupermarketManagerController extends SupermarketController {
 				break;
 			}
 		} else {
-			System.out.println("Product not found!");
+			view.showMessage("Product not found!");
 		}
 		return validInput;
 	}
@@ -315,8 +315,8 @@ public class SupermarketManagerController extends SupermarketController {
 			int inputno = Integer.parseInt(userinput);
 
 			if (inputno >= 0 && inputno <= supermarket.getProductList().size()) {
-				System.out.print("------------------------------------------------------------------------------\n");
-				System.out.print(String.format("%-40s %-5s %-7s %-4s\n", "", "Qty", "Sale", "Percentage"));
+				view.showMessage("------------------------------------------------------------------------------");
+				view.showMessage(String.format("%-40s %-5s %-7s %-4s", "", "Qty", "Sale", "Percentage"));
 				int counter = inputno;
 				if (inputno == 0) {
 					counter = supermarket.getProductList().size();
@@ -336,18 +336,18 @@ public class SupermarketManagerController extends SupermarketController {
 								.get(supermarket.getMostSoldItems()[i].getProductId());
 					}
 
-					System.out.print(String.format("%-40s %-5s %-7.2f %-4.2f%%\n", name, qty, sale, percentage));
+					view.showMessage(String.format("%-40s %-5s %-7.2f %-4.2f%%", name, qty, sale, percentage));
 				}
 
-				System.out.print("------------------------------------------------------------------------------\n");
+				view.showMessage("------------------------------------------------------------------------------");
 				state = STATE.START;
 				validinput = true;
 			} else {
-				System.out.println("Invalid number of items");
+				view.showMessage("Invalid number of items");
 			}
 
 		} catch (NumberFormatException e) {
-			System.out.println("Invalid Input");
+			view.showMessage("Invalid Input");
 
 		}
 		return validinput;
