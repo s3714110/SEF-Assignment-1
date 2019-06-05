@@ -48,6 +48,16 @@ public class Sale {
 		return item;
 	}
 	
+	public SaleLineItem getItem(int index) {
+		SaleLineItem item = null;
+				
+		if(itemList.size() > index)	{
+			item = itemList.get(index);
+		}
+		
+		return item;
+	}
+	
 	public double getTotal() {
 		calculateTotal();
 		return total;
@@ -79,6 +89,12 @@ public class Sale {
 		if(item != null) {	
 			itemList.remove(item);					
 		}
+	}
+	public void removeItem(int index) {
+				
+		if(itemList.size() > index)	{
+			itemList.remove(index);
+		}		
 	}
 	
 	public void removeAllItems() {

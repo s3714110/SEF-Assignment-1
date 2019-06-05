@@ -14,6 +14,7 @@ public class SaleLineItem {
 		unitprice = product.getPrice();
 		discount = 0.0;
 		subtotal = 0.0;
+		calculateSubtotal();
 	}
 
 	public String getProductId() {
@@ -37,7 +38,6 @@ public class SaleLineItem {
 	}
 	
 	public double getSubtotal() {	
-		calculateSubtotal();
 		return subtotal;		
 	}
 	
@@ -48,10 +48,20 @@ public class SaleLineItem {
 		
 	public void add(int qty) {
 		this.qty += qty;
+		calculateSubtotal();
+	}
+	
+	public void setQty(int qty) {
+		this.qty = qty;
+		calculateSubtotal();
 	}
 	
 	public void setDiscount(double discount) {
 		this.discount = discount;
+	}
+	
+	public void setSubTotal(double subTotal) {
+		this.subtotal = subTotal;
 	}
 	
 	public void setUnitPrice(double price) {

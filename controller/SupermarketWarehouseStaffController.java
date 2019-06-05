@@ -1,15 +1,18 @@
 package controller;
 
+import controller.SupermarketCustomerController.STATE;
 import model.SupermarketSystem;
 import view.SupermarketWarehouseStaffView;
 import view.SupermarketView;
 
 public class SupermarketWarehouseStaffController extends SupermarketController{
 
-	public static enum STATE { START, RESTOCK, CHECKSTOCK };
+	public static enum STATE { START, RESTOCK, CHECKSTOCK, VIEWPRODUCTLIST, CHECKINVENTORY };
 	
 	public final static String restock = "1";
 	public final static String checkstock = "2";
+	public final static String viewproductlist = "3";
+	public final static String checkinventory = "4";
 	
 	
 	private STATE state;
@@ -25,6 +28,9 @@ public class SupermarketWarehouseStaffController extends SupermarketController{
 		this.employeeId = employeeId;
 	}
 
+	public void setStateStart() {
+		state = STATE.START;
+	}
 	public STATE getState() {
 		return state;
 	}
@@ -54,6 +60,10 @@ public class SupermarketWarehouseStaffController extends SupermarketController{
 			case CHECKSTOCK:
 				validInput = processCheckStock(userinput);
 				break;
+			case VIEWPRODUCTLIST:
+				break;
+			case CHECKINVENTORY:
+				break;
 		}
 		
 		return validInput;
@@ -70,6 +80,14 @@ public class SupermarketWarehouseStaffController extends SupermarketController{
 		}
 		else if(0 == userinput.compareTo(checkstock)) {
 			state = STATE.CHECKSTOCK;
+			validInput = true;
+		}
+		else if(0 == userinput.compareTo(viewproductlist)) {
+			state = STATE.VIEWPRODUCTLIST;
+			validInput = true;
+		}
+		else if(0 == userinput.compareTo(checkinventory)) {
+			state = STATE.CHECKINVENTORY;
 			validInput = true;
 		}
 		
@@ -109,11 +127,13 @@ public class SupermarketWarehouseStaffController extends SupermarketController{
 			
 			System.out.println("" + productId + ": " + stockLevel);
 			
+			validInput = true;
 			state = STATE.START;
 		}		
 		
 		
 		return validInput;
 	}
+	
 	
 }

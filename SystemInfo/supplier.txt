@@ -1,0 +1,10 @@
+000001	Harlod's Grocery	egg6pk,egg12pk
+000002	The Market	asf10pk
+000003	Coca Cola	cc600ml,cc1500ml,cc2000ml
+000004	Bega Cheese	vgmt220g,vgmt380g,vgmt560g
+000005	The Eggporium	egg6pk,egg12pk
+000006	Eggceptional	egg6pk,egg12pk
+000007	Bega Valley Eggs	egg6pk,egg12pk
+000008	Upfield	fpra560g,fpra750g
+000009	Ferrero	nt400g
+000010	Yume	asf10pk
