@@ -40,6 +40,9 @@ public class SupermarketManagerView extends SupermarketView {
 		case STOCK:
 			showAskProductID();
 			break;
+		case REPORT:
+			showReportMenu();
+			break;
 		}
 
 		String userinput = controller.getUserInput();
@@ -47,6 +50,17 @@ public class SupermarketManagerView extends SupermarketView {
 	}
 
 	
+
+	private void showReportMenu() {
+		String show = "\n\n";
+		
+		show = show.concat("\tSale Report within a time period    :  1\n");
+		show = show.concat("\tSale Report on fast moving items    :  2\n");
+		show = show.concat("\tSupply Report                       :  3\n");
+		show = show.concat("\tGo back to menu                     :  4\n");
+		
+		System.out.println(show);
+	}
 
 	public void showStart() {
 		String show = "\n\n";
@@ -57,6 +71,7 @@ public class SupermarketManagerView extends SupermarketView {
 		show = show.concat("\tUpdate Product Price    :  3\n");
 		show = show.concat("\tSet Bulk Discount       :  4\n");
 		show = show.concat("\tManage Product Stock    :  5\n");
+		show = show.concat("\tView Report             :  6\n");
 		show = show.concat("\tTo Logout enter 'logout'\n");
 
 		System.out.println(show);

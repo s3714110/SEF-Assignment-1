@@ -4,8 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -47,6 +51,7 @@ public class SupermarketSystem {
 	private Map<String, Double> salePercentage;
 	private Map<String, Integer> saleQuantity;
 	private double totalSale;
+	private int fastMovingLevel;
 	
 	SupermarketView supermarketView;
 	
@@ -66,6 +71,7 @@ public class SupermarketSystem {
 		salePercentage = new HashMap<>();
 		saleQuantity = new HashMap<>();
 		totalSale = 0;
+		fastMovingLevel = 10;
 		
 		exitSystem = false;
 	}
@@ -73,7 +79,7 @@ public class SupermarketSystem {
 
 	public void run() {
 
-
+		
 		exitSystem = false;
 		setView_System();
 		
@@ -238,6 +244,8 @@ public class SupermarketSystem {
 
 		String customerId = "";
 		String saleId = "";
+		String dateString ="";
+		Date dateSale = null;
 		int counter = 0;
 
 		BufferedReader reader;
@@ -254,9 +262,15 @@ public class SupermarketSystem {
 				
 				saleId = token.next();
 				customerId = token.next();
-				
+				dateString = token.next();
+				try {
+					dateSale = new SimpleDateFormat("HH:mm:ss/dd/MM/yyyy").parse(dateString);
+				} catch (ParseException e) {
+					
+				} 
 
 				saleHistory.add(new Sale(saleId, customerId));
+				saleHistory.get(counter).setDate(dateSale);
 
 				while (token.hasNext()) {
 					Scanner saleToken = new Scanner(token.next());
@@ -337,6 +351,8 @@ public class SupermarketSystem {
 		customer.addPoints(sale.calculateCustomerPoints());	
 		
 		supermarketView.showTotalTransaction(totalTransaction);
+		
+		sale.setDate(new Date());
 		
 		saleHistory.add(sale);
 	}
@@ -429,7 +445,66 @@ public class SupermarketSystem {
 		return mostSoldItems;
 
 	}
+	
+	public Product[] getProductStockList() {
+		Product[] productStockList = new Product[warehouse.getProductList().size()];
+		Product temp;
+		
+		for (int i = 0; i < productStockList.length; i++) {
 
+			if (productStockList[i] == null) {
+				productStockList[i] = new Product(warehouse.getProductList().get(i).getId(),
+						warehouse.getProductList().get(i).getName(), 
+						warehouse.getProductList().get(i).getType(),
+						warehouse.getProductList().get(i).getPrice());
+			}
+
+		}
+		
+		for (int i = 0; i < productStockList.length; i++) {
+			for (int j = i + 1; j < productStockList.length; j++) {
+				if(warehouse.getStockLevel(productStockList[i].getId()) 
+						< warehouse.getStockLevel(productStockList[j].getId())) {
+					temp = productStockList[i];
+					productStockList[i] = productStockList[j];
+					productStockList[j] = temp;
+				}
+			}
+		}
+		return productStockList;
+	}
+	public double getSaleTotalbyDate(Date startDate, Date endDate){
+		double totalDateSale = 0;
+		for (Sale sale : saleHistory) {
+			if((startDate.equals(sale.getDate()) || startDate.before(sale.getDate()))
+				&& (endDate.equals(sale.getDate()) || endDate.after(sale.getDate()))) {
+				totalDateSale += sale.getTotal();
+			}
+		}
+		return totalDateSale;
+	}
+	
+	public LinkedList<Sale> getSalesbyDate(Date startDate, Date endDate){
+		LinkedList<Sale> dateSales = new LinkedList<>();
+		for (Sale sale : saleHistory) {
+			if((startDate.equals(sale.getDate()) || startDate.before(sale.getDate())) 
+					&& (endDate.equals(sale.getDate()) || endDate.after(sale.getDate()))) {
+				dateSales.add(sale);
+			}
+		}
+		return dateSales;
+	}
+	
+	public LinkedList<SaleLineItem> getFastMovingItems(){
+		LinkedList<SaleLineItem> fastMovingItems = new LinkedList<>();
+		for(int i = 0; i < getMostSoldItems().length; i++) {
+			if(getMostSoldItems()[i].getQty() >= fastMovingLevel) {
+				fastMovingItems.add(getMostSoldItems()[i]);
+			}
+		}
+		return fastMovingItems;
+		
+	}
 	public Map<String, Double> getSalePercentage() {
 
 		return salePercentage;
@@ -446,6 +521,13 @@ public class SupermarketSystem {
 		return warehouse.getSuppliers();
 	}
 	
+	public int getFastMovingLevel() {
+		return fastMovingLevel;
+	}
+	
+	public void setFastMovingLevel(int fastMovingLevel) {
+		this.fastMovingLevel = fastMovingLevel;
+	}
 	// Discount Functions
 	public double calculateBulkDiscount(String productId, int qty) {
 		return discounts.calculateBulkDiscount(productId, qty);

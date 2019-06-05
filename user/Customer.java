@@ -60,5 +60,9 @@ public class Customer {
 		return "Customer: \n\tid:  " + id + "\n\tname:  " + name + "\n\taddress:  " + address + "\n\tPhone No.:  " + phoneNo + "\n\tpoints:  " + Double.toString(points);
 	}
 
-
+	public int getPostCode() {
+		int postCode = Integer.parseInt(address.substring(address.length() - 4));
+		return postCode;
+	}
+	
 }

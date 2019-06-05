@@ -1,9 +1,14 @@
 package controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 import controller.SupermarketWarehouseStaffController.STATE;
 import model.SupermarketSystem;
+import sale.Sale;
+import sale.SaleLineItem;
 import view.SupermarketManagerView;
 import view.SupermarketView;
 import warehouse.Product;
@@ -12,7 +17,7 @@ import warehouse.Supplier;
 public class SupermarketManagerController extends SupermarketController {
 
 	public static enum STATE {
-		START, MOSTSOLD, SUPPLIER, PRICECHANGE, BULKDISCOUNT, STOCK
+		START, MOSTSOLD, SUPPLIER, PRICECHANGE, BULKDISCOUNT, STOCK, REPORT
 	};
 
 	public final static String mostsold = "1";
@@ -20,6 +25,7 @@ public class SupermarketManagerController extends SupermarketController {
 	public final static String pricechange = "3";
 	public final static String bulkdiscount = "4";
 	public final static String stock = "5";
+	public final static String report = "6";
 
 	private STATE state;
 	private SupermarketManagerView view;
@@ -68,8 +74,123 @@ public class SupermarketManagerController extends SupermarketController {
 		case STOCK:
 			validInput = processProductStock(userinput);
 			break;
+		case REPORT:
+			validInput = processReport(userinput);
+			break;
 		}
 
+		return validInput;
+	}
+
+	private boolean processReport(String userinput) {
+		boolean validInput = false;
+			switch(userinput) {
+			case "1":
+				validInput = timeReport();
+				break;
+			case "2":
+				validInput = fastReport();
+				break;
+			case "3":
+				validInput = supplyReprt();
+				break;
+			case "4":
+				state = STATE.START;
+				validInput = true;
+				break;
+			}
+		return validInput;
+	}
+	private boolean supplyReprt() {
+		boolean validInput = false;
+		
+		view.showMessage("------------------------------------------------------------------------------");
+		view.showMessage(String.format("%-40s %-5s", "", "Qty"));
+		
+		for (int i = 0; i < supermarket.getProductStockList().length; i++) {
+			String name = supermarket.getProductStockList()[i].getName();
+			int qty = supermarket.getStockLevel(supermarket.getProductStockList()[i].getId());
+			
+			view.showMessage(String.format("%-40s %-5s ", name, qty));
+			
+		}
+		
+		view.showMessage("------------------------------------------------------------------------------");
+		
+		validInput = true;
+		return validInput;
+	}
+
+
+	private boolean fastReport() {
+		boolean validInput = false;
+		
+		view.showMessage("Current fast moving level: " + supermarket.getFastMovingLevel());
+		view.showMessage("------------------------------------------------------------------------------");
+		view.showMessage(String.format("%-40s %-5s %-7s %-4s", "", "Qty", "Sale", "Percentage"));
+		
+		for(SaleLineItem item: supermarket.getFastMovingItems()) {
+			String name = item.getProductName();
+			double sale = item.getSubtotal();
+			
+			int qty = 0;
+			if (supermarket.getSaleQuantity().containsKey(item.getProductId())) {
+				qty = supermarket.getSaleQuantity().get(item.getProductId());
+			}
+			
+			double percentage = 0;
+			if (supermarket.getSalePercentage().containsKey(item.getProductId())) {
+				percentage = supermarket.getSalePercentage()
+						.get(item.getProductId());
+			}
+			
+			view.showMessage(String.format("%-40s %-5s %-7.2f %-4.2f%%", name, qty, sale, percentage));
+			
+		}
+		view.showMessage("------------------------------------------------------------------------------");
+		
+		validInput = true;
+		
+		return validInput;
+	}
+
+	private boolean timeReport() {
+		boolean validInput = false;
+		Scanner timeScanner = new Scanner(System.in);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date startDate = null;
+		Date endDate = null;
+		
+		view.showMessage("Enter starting date (format dd/MM/yyyy): ");
+		String dateStartString = timeScanner.nextLine();
+		view.showMessage("Enter ending date (format dd/MM/yyyy): ");
+		String dateEndString = timeScanner.nextLine();
+		
+		try {
+		    //Parsing the String
+			startDate = dateFormat.parse(dateStartString);
+			endDate = dateFormat.parse(dateEndString);
+			view.showMessage("------------------------------------------------------------------------------");
+			view.showMessage(String.format("%-40s %-5s %-20s", "Sale Id", "Date", "Sale"));
+			for (Sale sale: supermarket.getSalesbyDate(startDate, endDate) ) {
+				String saleID = sale.getSaleId();
+				String dateSale = dateFormat.format(sale.getDate());
+				double saleTotal = sale.getTotal();
+				view.showMessage(String.format("%-40s %-5s %-20.2f", saleID, dateSale, saleTotal));
+				
+			}
+			
+			view.showMessage(String.format("Total sale within this time period: $ %.2f", 
+					supermarket.getSaleTotalbyDate(startDate, endDate)) );
+			view.showMessage("------------------------------------------------------------------------------");
+			validInput = true;
+			
+		} catch (ParseException e) {
+			view.showMessage("Invalid date");
+		}
+		
+		
+		
 		return validInput;
 	}
 
@@ -88,7 +209,8 @@ public class SupermarketManagerController extends SupermarketController {
 				view.showMessage("\tRestock product         :      1");
 				view.showMessage("\tSet Replenish Level     :      2");
 				view.showMessage("\tSet restock quantity    :      3");
-				view.showMessage("\tGo back to menu         :      4");
+				view.showMessage("\tSet fast moving level(all items) :      4");
+				view.showMessage("\tGo back to menu         :      5");
 
 				Scanner stockScanner = new Scanner(System.in);
 				String input = stockScanner.nextLine();
@@ -127,6 +249,17 @@ public class SupermarketManagerController extends SupermarketController {
 					}
 					break;
 				case "4":
+					view.showMessage("Enter the fast moving level: ");
+					String fastMoving = stockScanner.nextLine();
+					try {
+						int fastMovingLevel = Integer.parseInt(fastMoving);
+						supermarket.setFastMovingLevel(fastMovingLevel);
+
+					} catch (NumberFormatException e) {
+						view.showMessage("Invalid input");
+					}
+					break;
+				case "5":
 					state = STATE.START;
 					validInput = true;
 					goback = true;
@@ -389,6 +522,11 @@ public class SupermarketManagerController extends SupermarketController {
 
 		else if (0 == userinput.compareTo(stock)) {
 			state = STATE.STOCK;
+			validInput = true;
+		}
+		
+		else if (0 == userinput.compareTo(report)) {
+			state = STATE.REPORT;
 			validInput = true;
 		}
 
